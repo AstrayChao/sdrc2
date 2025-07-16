@@ -1,14 +1,23 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, Noto_Sans_SC, Roboto_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Inter, Noto_Sans_SC } from "next/font/google"
 import "./globals.css"
 import { AppLayout } from "@/components/layout/app-layout"
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: '--font-inter', })
-const notoSansSC = Noto_Sans_SC({ subsets: ['latin'], display: "swap", variable: '--font-noto-sans-sc' })
-const robotoMono = Roboto_Mono({ subsets: ['latin'], display: "swap", variable: '--font-roboto-mono' })
+const notoSansSC = Noto_Sans_SC({
+    subsets: ['latin'],
+    display: "swap",
+    variable: '--font-noto-sans-sc'
+})
+const geistMono = Geist_Mono({
+    subsets: ['latin'],
+    display: 'swap',
+    variable: '--font-geist-mono',
+})
+const geist = Geist({ subsets: ['latin'], display: "swap", variable: '--font-geist' })
 export const metadata: Metadata = {
     title: "科学数据库中心",
     description: "全球领先的科学数据仓库发现平台，帮助研究人员找到、访问和使用高质量的研究数据资源。",
@@ -33,7 +42,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="zh"
-              className={`${inter.variable} ${notoSansSC.variable} ${robotoMono.variable}`}
+              className={`${inter.variable} ${geistMono.variable} ${notoSansSC.variable} ${geist.variable}`}
               suppressHydrationWarning>
 
         <body>

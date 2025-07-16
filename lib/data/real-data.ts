@@ -17,6 +17,193 @@ function getRandomSources(): Source[] {
 
 const realRepositories: Repository[] = [
     {
+        id: "10.25504/FAIRsharing.g56qnp",
+        name: "HIstome",
+        additionalNames: ["The Histone Infobase"],
+        url: "http://www3.iiserpune.ac.in/~coee/histome/",
+        repositoryIdentifier: ["10.25504/FAIRsharing.g56qnp", "OMICS_03500", "SCR_006972", "nlx_151419"],
+        description:
+            "HIstome: The Histone Infobase is a database of human histones, their post-translational modifications and modifying enzymes. HIstome is a combined effort of researchers from two institutions, Advanced Center for Treatment, Research and Education in Cancer (ACTREC), Navi Mumbai and Center of Excellence in Epigenetics, Indian Institute of Science Education and Research (IISER), Pune.",
+        repositoryContact: ["histome@iiserpune.ac.in", "http://www3.iiserpune.ac.in/~coee/histome/contact_us.php"],
+        type: "disciplinary",
+        size: "Informations about ~50 histone proteins and ~150 histone modifying enzymes",
+        startDate: "2011",
+        endDate: null,
+        subjects: ["2 Life Sciences", "20103 Cell Biology"],
+        contentTypes: ["Plain text", "Raw data", "Scientific and statistical data formats"],
+        keywords: ["RNA", "biology"],
+        institutions: [
+            {
+                institutionName: "Indian Institute of Science Education and Research",
+                institutionAdditionalNames: ["IISER", "भारतीय विज्ञान शिक्षा एवं अनुसंधान संस्थान"],
+                institutionCountry: "IND",
+                responsibilityType: ["funding", "general", "technical"],
+                institutionType: "non-profit",
+                institutionURL: "https://www.iiserpune.ac.in/institute/about",
+                institutionIdentifier: ["ROR:028qa3n13"],
+                institutionContact: [],
+                coordinates: [18.5204, 73.8567], // Pune, India coordinates
+            },
+        ],
+        policy: [
+            {
+                policyName: "ACTREC Internet and electronic access policy",
+                policyURL: "https://www.actrec.gov.in/policies",
+            },
+            {
+                policyName: "ACTREC Terms of Use",
+                policyURL: "https://www.actrec.gov.in/terms-use",
+            },
+            {
+                policyName: "TMC Policies and Terms of Use",
+                policyURL: "https://tmc.gov.in/index.php/en/policies-terms-of-use",
+            },
+        ],
+        databaseLicense: [],
+        dataAccess: [
+            {
+                dataAccessType: "open",
+                dataAccessRestriction: [],
+            },
+        ],
+        dataLicense: [
+            {
+                dataLicenseName: "Public Domain",
+                dataLicenseURL: "http://www3.iiserpune.ac.in/~coee/histome/",
+            },
+        ],
+        dataUpload: [
+            {
+                dataUploadType: "restricted",
+                dataUploadRestriction: ["registration"],
+            },
+        ],
+        dataUploadLicense: [
+            {
+                dataUploadLicenseName: "Public Domain",
+                dataUploadLicenseURL: "http://www3.iiserpune.ac.in/~coee/histome/",
+            },
+        ],
+        versioning: "",
+        api: [
+            {
+                value: "http://spidr.ionosonde.net/spidr/tools.do",
+                apiType: "REST",
+            },
+        ],
+        pidSystem: ["none"],
+        aidSystem: [],
+        qualityManagement: "yes",
+        certificates: ["WDS"],
+        metadataStandard: [
+            {
+                metadataStandardName: "Repository-Developed Metadata Schemas",
+                metadataStandardURL: "http://www.dcc.ac.uk/resources/metadata-standards/repository-developed-metadata-schemas",
+            },
+        ],
+        lastUpdate: "2024-03-05",
+        from: ["FAIRsharing", "re3data"],
+    },
+
+    // FAIRsharing 映射数据示例
+    {
+        id: "10.25504/FAIRsharing.g56qnp1",
+        certificates: ["FAIRsharing"],
+        name: "Histone Infobase",
+        additionalNames: ["HIstome"],
+        url: "http://www3.iiserpune.ac.in/~coee/histome/",
+        description:
+            "HIstome (Human histone database) is a freely available, specialist, electronic database dedicated to display information about human histone variants, sites of their post-translational modifications and about various histone modifying enzymes.",
+        repositoryContact: ["sanjeev@iiserpune.ac.in"],
+        startDate: "2011",
+        endDate: "2025-02-26",
+        deprecationReason:
+            "The resource homepage is no longer available, and a new one cannot be found. Please let us know if you have any information.",
+        subjects: ["Life Science", "Epigenetics"],
+        contentTypes: ["dataset"],
+        keywords: ["Gene name", "histone", "enzyme"],
+        versioning: "not found",
+        countries: ["India"],
+        institutions: [
+            {
+                institutionName: "Indian Institute of Science Education and Research Pune, India",
+                responsibilityType: ["funding"],
+                institutionType: "Government body",
+                coordinates: [18.5204, 73.8567], // Pune, India coordinates
+            },
+        ],
+        repositoryIdentifier: ["re3data:r3d100010977", "SciCrunch:RRID:SCR_006972", "DOI:10.25504/FAIRsharing.g56qnp"],
+        dataAccess: [
+            {
+                dataAccessType: "open",
+            },
+        ],
+        dataUploadLicense: [
+            {
+                dataUploadLicenseURL: "https://doi.org/10.1093/nar/gkr1125",
+                dataUploadLicenseName: "not applicable",
+            },
+        ],
+        lastUpdate: "2024-03-05",
+        from: ["FAIRsharing"],
+    },
+    {
+        id: "10.18150/re3data.00005.1",
+        name: "GenBank",
+        url: "https://www.ncbi.nlm.nih.gov/genbank/",
+        description:
+            "GenBank is the NIH genetic sequence database, an annotated collection of all publicly available DNA sequences.",
+        subjects: ["Life Sciences", "Genomics", "Genetics"],
+        contentTypes: ["DNA sequence", "RNA sequence", "Genomic data"],
+        institutions: [
+            {
+                institutionName: "National Center for Biotechnology Information",
+                institutionAdditionalNames: ["NCBI"],
+                institutionCountry: "USA",
+                institutionType: "government",
+                coordinates: [38.9072, -77.0369], // Bethesda, MD
+            },
+        ],
+        certificates: ["CoreTrustSeal"],
+        startDate: "1982",
+        size: "250M+ sequences",
+        dataAccess: [{ dataAccessType: "open" }],
+        api: [{ apiType: "REST", value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/" }],
+        lastUpdate: "2024-01-15",
+        from: ["re3data"],
+    },
+
+    {
+        id: "10.25504/FAIRsharing.g56qn2p",
+        name: "UniProt",
+        url: "https://www.uniprot.org/",
+        description:
+            "The Universal Protein Resource (UniProt) is a comprehensive resource for protein sequence and annotation data.",
+        subjects: ["Life Sciences", "Proteomics", "Bioinformatics"],
+        contentTypes: ["Protein sequence", "Protein structure", "Functional annotation"],
+        institutions: [
+            {
+                institutionName: "European Molecular Biology Laboratory - European Bioinformatics Institute",
+                institutionAdditionalNames: ["EMBL-EBI"],
+                institutionCountry: "GBR",
+                coordinates: [52.0799, 0.1873], // Cambridge, UK
+            },
+            {
+                institutionName: "Swiss Institute of Bioinformatics",
+                institutionAdditionalNames: ["SIB"],
+                institutionCountry: "CHE",
+                coordinates: [46.5197, 6.6323], // Lausanne, Switzerland
+            },
+        ],
+        certificates: ["FAIR", "CoreTrustSeal"],
+        startDate: "2002",
+        size: "220M+ protein entries",
+        dataAccess: [{ dataAccessType: "open" }],
+        api: [{ apiType: "REST", value: "https://rest.uniprot.org/" }],
+        lastUpdate: "2024-02-01",
+        from: ["FAIRsharing"],
+    },
+    {
         id: "genbank",
         name: "GenBank",
         description:
@@ -35,7 +222,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["info@ncbi.nlm.nih.gov"],
+        repositoryContact: ["info@ncbi.nlm.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -55,7 +242,7 @@ const realRepositories: Repository[] = [
                 value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
             },
         ],
-        identifiers: ["RRID:SCR_002760"],
+        repositoryIdentifier: ["RRID:SCR_002760"],
         size: "> 400 million sequences",
         startDate: "1988-01-01",
         lastUpdate: "2024-01-15",
@@ -95,7 +282,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.9526, -75.1652], // Philadelphia, PA
             },
         ],
-        contacts: ["help@uniprot.org"],
+        repositoryContact: ["help@uniprot.org"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -119,7 +306,7 @@ const realRepositories: Repository[] = [
                 value: "https://sparql.uniprot.org/sparql",
             },
         ],
-        identifiers: ["RRID:SCR_002380"],
+        repositoryIdentifier: ["RRID:SCR_002380"],
         size: "> 200 million protein sequences",
         startDate: "2003-01-01",
         lastUpdate: "2024-01-10",
@@ -158,7 +345,7 @@ const realRepositories: Repository[] = [
                 coordinates: [35.6762, 139.6503], // Tokyo, Japan
             },
         ],
-        contacts: ["info@rcsb.org"],
+        repositoryContact: ["info@rcsb.org"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -182,7 +369,7 @@ const realRepositories: Repository[] = [
                 value: "https://data.rcsb.org/graphql",
             },
         ],
-        identifiers: ["RRID:SCR_012820"],
+        repositoryIdentifier: ["RRID:SCR_012820"],
         size: "> 200,000 structures",
         startDate: "1971-01-01",
         lastUpdate: "2024-01-12",
@@ -206,7 +393,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["chembl-help@ebi.ac.uk"],
+        repositoryContact: ["chembl-help@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -226,7 +413,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/chembl/api/",
             },
         ],
-        identifiers: ["RRID:SCR_014042"],
+        repositoryIdentifier: ["RRID:SCR_014042"],
         size: "> 2 million compounds",
         startDate: "2009-01-01",
         lastUpdate: "2024-01-08",
@@ -250,7 +437,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["arrayexpress@ebi.ac.uk"],
+        repositoryContact: ["arrayexpress@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -270,7 +457,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/arrayexpress/json/",
             },
         ],
-        identifiers: ["RRID:SCR_002964"],
+        repositoryIdentifier: ["RRID:SCR_002964"],
         size: "> 100,000 experiments",
         startDate: "2003-01-01",
         lastUpdate: "2024-01-05",
@@ -295,7 +482,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["sra@ncbi.nlm.nih.gov"],
+        repositoryContact: ["sra@ncbi.nlm.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -319,7 +506,7 @@ const realRepositories: Repository[] = [
                 value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
             },
         ],
-        identifiers: ["RRID:SCR_004891"],
+        repositoryIdentifier: ["RRID:SCR_004891"],
         size: "> 40 petabytes",
         startDate: "2007-01-01",
         lastUpdate: "2024-01-14",
@@ -344,7 +531,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["ena-support@ebi.ac.uk"],
+        repositoryContact: ["ena-support@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -364,7 +551,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/ena/portal/api/",
             },
         ],
-        identifiers: ["RRID:SCR_004891"],
+        repositoryIdentifier: ["RRID:SCR_004891"],
         size: "> 30 petabytes",
         startDate: "2008-01-01",
         lastUpdate: "2024-01-13",
@@ -389,7 +576,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["pride-support@ebi.ac.uk"],
+        repositoryContact: ["pride-support@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -409,7 +596,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/pride/ws/archive/",
             },
         ],
-        identifiers: ["RRID:SCR_003411"],
+        repositoryIdentifier: ["RRID:SCR_003411"],
         size: "> 25,000 datasets",
         startDate: "2004-01-01",
         lastUpdate: "2024-01-11",
@@ -433,7 +620,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["metabolights-help@ebi.ac.uk"],
+        repositoryContact: ["metabolights-help@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -453,7 +640,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/metabolights/ws/",
             },
         ],
-        identifiers: ["RRID:SCR_007688"],
+        repositoryIdentifier: ["RRID:SCR_007688"],
         size: "> 2,000 studies",
         startDate: "2012-01-01",
         lastUpdate: "2024-01-09",
@@ -477,7 +664,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["biostudies@ebi.ac.uk"],
+        repositoryContact: ["biostudies@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -497,7 +684,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/biostudies/api/",
             },
         ],
-        identifiers: ["RRID:SCR_017650"],
+        repositoryIdentifier: ["RRID:SCR_017650"],
         size: "> 100,000 studies",
         startDate: "2017-01-01",
         lastUpdate: "2024-01-07",
@@ -522,7 +709,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["geo@ncbi.nlm.nih.gov"],
+        repositoryContact: ["geo@ncbi.nlm.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -542,7 +729,7 @@ const realRepositories: Repository[] = [
                 value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
             },
         ],
-        identifiers: ["RRID:SCR_005012"],
+        repositoryIdentifier: ["RRID:SCR_005012"],
         size: "> 150,000 series",
         startDate: "2000-01-01",
         lastUpdate: "2024-01-16",
@@ -567,7 +754,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["dbgap-help@ncbi.nlm.nih.gov"],
+        repositoryContact: ["dbgap-help@ncbi.nlm.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -587,7 +774,7 @@ const realRepositories: Repository[] = [
                 value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
             },
         ],
-        identifiers: ["RRID:SCR_002709"],
+        repositoryIdentifier: ["RRID:SCR_002709"],
         size: "> 1,000 studies",
         startDate: "2007-01-01",
         lastUpdate: "2024-01-17",
@@ -611,7 +798,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["clinvar@ncbi.nlm.nih.gov"],
+        repositoryContact: ["clinvar@ncbi.nlm.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -631,7 +818,7 @@ const realRepositories: Repository[] = [
                 value: "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/",
             },
         ],
-        identifiers: ["RRID:SCR_006169"],
+        repositoryIdentifier: ["RRID:SCR_006169"],
         size: "> 2 million variants",
         startDate: "2013-01-01",
         lastUpdate: "2024-01-18",
@@ -656,7 +843,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.2904, -76.6122], // Baltimore, MD
             },
         ],
-        contacts: ["omim@jhmi.edu"],
+        repositoryContact: ["omim@jhmi.edu"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -676,7 +863,7 @@ const realRepositories: Repository[] = [
                 value: "https://api.omim.org/api/",
             },
         ],
-        identifiers: ["RRID:SCR_006437"],
+        repositoryIdentifier: ["RRID:SCR_006437"],
         size: "> 25,000 entries",
         startDate: "1985-01-01",
         lastUpdate: "2024-01-19",
@@ -701,8 +888,38 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["cosmic@sanger.ac.uk"],
-        certificates: ["Trusted Digital Repository"],
+        dataUpload: [
+            {
+                dataUploadType: "Open",
+                dataUploadRestriction: ["Data access"],
+            },
+        ],
+        metadataStandard: [
+            {
+                metadataStandardName: "COSMIC Metadata Standard",
+                metadataStandardURL: "https://cancer.sanger.ac.uk/cosmic/help/metadata",
+            },
+        ],
+        databaseLicense: [
+            {
+                databaseLicenseName: "CC BY 4.0",
+                databaseLicenseURL: "https://creativecommons.org/licenses/by/4.0/",
+            }
+        ],
+        dataUploadLicense: [
+            {
+                dataUploadLicenseName: "CC BY 4.0",
+                dataUploadLicenseURL: "https://creativecommons.org/licenses/by/4.0/",
+            }
+        ],
+        policy: [
+            {
+                policyName: "Data Access Policy",
+                policyURL: "https://www.cosmic.sanger.ac.uk/data-access-policy/",
+            }
+        ],
+        repositoryContact: ["cosmic@sanger.ac.uk"],
+        certificates: ["Trusted Digital Repository", "中国科学院总中心"],
         dataAccess: [
             {
                 dataAccessType: "open",
@@ -718,6 +935,9 @@ const realRepositories: Repository[] = [
                 dataLicenseName: "COSMIC License",
                 dataLicenseURL: "https://cancer.sanger.ac.uk/cosmic/license",
             },
+            {
+                dataLicenseName: "License",
+            },
         ],
         api: [
             {
@@ -725,7 +945,10 @@ const realRepositories: Repository[] = [
                 value: "https://cancer.sanger.ac.uk/cosmic/api",
             },
         ],
-        identifiers: ["RRID:SCR_002260"],
+        repositoryIdentifier: ["RRID:SCR_002260", "DOI:10.22222.333/sf "],
+        pidSystem: ["DOI", "CSTR"],
+        aidSystem: ["CSTR", "ORCID"],
+        qualityManagement: "yes",
         size: "> 6 million mutations",
         startDate: "2004-01-01",
         lastUpdate: "2024-01-20",
@@ -757,7 +980,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["tcga@mail.nih.gov"],
+        repositoryContact: ["tcga@mail.nih.gov"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -781,7 +1004,7 @@ const realRepositories: Repository[] = [
                 value: "https://api.gdc.cancer.gov/",
             },
         ],
-        identifiers: ["RRID:SCR_003193"],
+        repositoryIdentifier: ["RRID:SCR_003193"],
         size: "> 2.5 petabytes",
         startDate: "2006-01-01",
         lastUpdate: "2024-01-21",
@@ -810,11 +1033,11 @@ const realRepositories: Repository[] = [
                 institutionName: "National Human Genome Research Institute (NHGRI)",
                 institutionCountry: "USA",
                 institutionType: "Government agency",
-                responsibilityType: ["Funding agency"],
+                responsibilityType: ["Funding"],
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["encode-help@lists.stanford.edu"],
+        repositoryContact: ["encode-help@lists.stanford.edu"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -834,7 +1057,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.encodeproject.org/",
             },
         ],
-        identifiers: ["RRID:SCR_015482"],
+        repositoryIdentifier: ["RRID:SCR_015482"],
         size: "> 10,000 experiments",
         startDate: "2003-01-01",
         lastUpdate: "2024-01-22",
@@ -846,6 +1069,7 @@ const realRepositories: Repository[] = [
             "The 1000 Genomes Project was an international research effort to establish by far the most detailed catalogue of human genetic variation. Scientists planned to sequence the genomes of at least one thousand anonymous participants from a number of different ethnic groups within the following populations.",
         url: "https://www.internationalgenome.org/",
         from: getRandomSources(),
+        type: "disciplinary",
         subjects: ["Population Genetics", "Human Genetics", "Genomic Variation", "Evolution"],
         contentTypes: ["Genome sequences", "Variant data", "Population data", "Haplotype data"],
         keywords: ["population genetics", "human variation", "genomes", "variants", "evolution"],
@@ -865,7 +1089,7 @@ const realRepositories: Repository[] = [
                 coordinates: [39.0458, -76.9413], // Bethesda, MD
             },
         ],
-        contacts: ["info@1000genomes.org"],
+        repositoryContact: ["info@1000genomes.org"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -885,7 +1109,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.internationalgenome.org/api/",
             },
         ],
-        identifiers: ["RRID:SCR_006828"],
+        repositoryIdentifier: ["RRID:SCR_006828"],
         size: "> 2,500 genomes",
         startDate: "2008-01-01",
         lastUpdate: "2024-01-23",
@@ -911,7 +1135,7 @@ const realRepositories: Repository[] = [
                 coordinates: [42.3601, -71.0589], // Cambridge, MA
             },
         ],
-        contacts: ["gnomad@broadinstitute.org"],
+        repositoryContact: ["gnomad@broadinstitute.org"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -931,7 +1155,7 @@ const realRepositories: Repository[] = [
                 value: "https://gnomad.broadinstitute.org/api",
             },
         ],
-        identifiers: ["RRID:SCR_014964"],
+        repositoryIdentifier: ["RRID:SCR_014964"],
         size: "> 125,000 exomes and 15,000 genomes",
         startDate: "2016-01-01",
         lastUpdate: "2024-01-24",
@@ -962,7 +1186,7 @@ const realRepositories: Repository[] = [
                 coordinates: [43.6532, -79.3832], // Toronto, Canada
             },
         ],
-        contacts: ["help@reactome.org"],
+        repositoryContact: ["help@reactome.org"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -982,7 +1206,7 @@ const realRepositories: Repository[] = [
                 value: "https://reactome.org/ContentService/",
             },
         ],
-        identifiers: ["RRID:SCR_003485"],
+        repositoryIdentifier: ["RRID:SCR_003485"],
         size: "> 2,500 pathways",
         startDate: "2003-01-01",
         lastUpdate: "2024-01-25",
@@ -1014,7 +1238,7 @@ const realRepositories: Repository[] = [
                 coordinates: [49.3988, 8.6724], // Heidelberg, Germany
             },
         ],
-        contacts: ["string@string-db.org"],
+        repositoryContact: ["string@string-db.org"],
         certificates: ["Trusted Digital Repository"],
         dataAccess: [
             {
@@ -1034,7 +1258,7 @@ const realRepositories: Repository[] = [
                 value: "https://string-db.org/api/",
             },
         ],
-        identifiers: ["RRID:SCR_005223"],
+        repositoryIdentifier: ["RRID:SCR_005223"],
         size: "> 24 million proteins",
         startDate: "2003-01-01",
         lastUpdate: "2024-01-26",
@@ -1063,7 +1287,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["intact-help@ebi.ac.uk"],
+        repositoryContact: ["intact-help@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -1083,7 +1307,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/intact/ws/",
             },
         ],
-        identifiers: ["RRID:SCR_006706"],
+        repositoryIdentifier: ["RRID:SCR_006706"],
         size: "> 1 million interactions",
         startDate: "2004-01-01",
         lastUpdate: "2024-01-27",
@@ -1107,7 +1331,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["pfam-help@ebi.ac.uk"],
+        repositoryContact: ["pfam-help@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -1127,7 +1351,7 @@ const realRepositories: Repository[] = [
                 value: "https://pfam.xfam.org/search/",
             },
         ],
-        identifiers: ["RRID:SCR_004726"],
+        repositoryIdentifier: ["RRID:SCR_004726"],
         size: "> 19,000 families",
         startDate: "1997-01-01",
         lastUpdate: "2024-01-28",
@@ -1151,7 +1375,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["interhelp@ebi.ac.uk"],
+        repositoryContact: ["interhelp@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -1171,7 +1395,7 @@ const realRepositories: Repository[] = [
                 value: "https://www.ebi.ac.uk/interpro/api/",
             },
         ],
-        identifiers: ["RRID:SCR_006695"],
+        repositoryIdentifier: ["RRID:SCR_006695"],
         size: "> 38,000 signatures",
         startDate: "1999-01-01",
         lastUpdate: "2024-01-29",
@@ -1203,7 +1427,7 @@ const realRepositories: Repository[] = [
                 coordinates: [52.0799, 0.1873], // Hinxton, UK
             },
         ],
-        contacts: ["alphafold@ebi.ac.uk"],
+        repositoryContact: ["alphafold@ebi.ac.uk"],
         certificates: ["CoreTrustSeal"],
         dataAccess: [
             {
@@ -1223,7 +1447,7 @@ const realRepositories: Repository[] = [
                 value: "https://alphafold.ebi.ac.uk/api/",
             },
         ],
-        identifiers: ["RRID:SCR_021400"],
+        repositoryIdentifier: ["RRID:SCR_021400"],
         size: "> 200 million structures",
         startDate: "2021-01-01",
         lastUpdate: "2024-01-30",
@@ -1239,13 +1463,17 @@ export function getProcessedRepositories(): Repository[] {
         contentTypes: repo.contentTypes || [],
         keywords: repo.keywords || [],
         institutions: repo.institutions || [],
-        contacts: repo.contacts || [],
+        repositoryContact: repo.repositoryContact || [],
         certificates: repo.certificates || [],
         dataAccess: repo.dataAccess || [],
         dataLicense: repo.dataLicense || [],
         api: repo.api || [],
-        identifiers: repo.identifiers || [],
+        repositoryIdentifier: repo.repositoryIdentifier || [],
     }))
+}
+
+export function getRepositoryById(id: string) {
+    return getProcessedRepositories().find((repo) => repo.id === id)
 }
 
 // 获取统计数据

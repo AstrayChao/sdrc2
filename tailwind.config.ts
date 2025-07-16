@@ -20,8 +20,31 @@ const config = {
         },
         extend: {
             fontFamily: {
-                sans: ["var(--font-inter)", "var(--font-noto-sans-sc)"],
-                mono: ["var(--font-roboto-mono)"],
+                sans: [
+                    'var(--font-geist)',
+                    'var(--font-noto-sans-sc)',
+                    'system-ui',
+                    '-apple-system',
+                    'BlinkMacSystemFont',
+                    'Segoe UI',
+                    'Roboto',
+                    'sans-serif',
+                ],
+                mono: [
+                    'var(--font-geist-mono)',
+                    'Menlo',
+                    'Monaco',
+                    'Consolas',
+                    'Liberation Mono',
+                    'Courier New',
+                    'monospace',
+                ],
+                serif: [
+                    'Georgia',
+                    'var(--font-noto-sans-sc)',
+                    'Times New Roman',
+                    'serif',
+                ],
             },
             colors: {
                 border: "hsl(var(--border))",

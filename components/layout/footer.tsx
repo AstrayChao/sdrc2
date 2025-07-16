@@ -1,8 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Mail, MapPin, Phone } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Mail, MapPin, Phone } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 export function Footer() {
@@ -30,6 +29,10 @@ export function Footer() {
                     <div className="space-y-4">
                         <h4 className="font-medium">快速链接</h4>
                         <nav className="flex flex-col space-y-2">
+                            <Link href={"/"}
+                                  className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                                首页
+                            </Link>
                             <Link href="/catalog"
                                   className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                                 数据目录
@@ -38,13 +41,8 @@ export function Footer() {
                                   className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                                 仪表板
                             </Link>
-                            <Link href="/favorites"
-                                  className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                                我的收藏
-                            </Link>
-                            <Link
-                                href="/comparison"
-                                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            <Link href="/comparison"
+                                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 对比分析
                             </Link>
@@ -80,24 +78,16 @@ export function Footer() {
                         <div className="space-y-2">
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                                 <Mail className="h-4 w-4" />
-                                <span>support@scidata.org</span>
+                                <span>support@test.org</span>
                             </div>
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                                 <Phone className="h-4 w-4" />
-                                <span>+86 400-123-4567</span>
+                                <span>test</span>
                             </div>
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                                 <MapPin className="h-4 w-4" />
                                 <span>北京市海淀区中关村</span>
                             </div>
-                        </div>
-                        <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
-                                <Github className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                                <Mail className="h-4 w-4" />
-                            </Button>
                         </div>
                     </div>
                 </div>

@@ -84,14 +84,13 @@ export default function HomePage() {
                         <Zap className="h-4 w-4 mr-2" />
                         全球领先的科学数据发现平台
                     </Badge>
-                    <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight
-                    ">
+                    <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight">
                         发现全球
                         <span
                             className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">科学数据</span>
                         资源
                     </h1>
-                    <p className="font-mono text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                    <p className=" text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                         汇聚全球高质量科学数据仓库，为研究人员提供便捷的数据发现、访问和管理服务， 加速科学研究和创新发展。
                     </p>
                 </div>

@@ -7,22 +7,26 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { RealRepositoryCard } from "./real-repository-card"
-import { RealRepositoryDetail } from "./real-repository-detail"
 import { AdvancedSearch } from "../search/advanced-search"
 import { getProcessedRepositories, searchRepositories, sourcePriority } from "@/lib/data/real-data"
 import type { Repository } from "@/types/repository"
+import { useRouter } from "next/navigation";
 
 
 export function RepositoryCatalog() {
     const [repositories, setRepositories] = useState<Repository[]>([])
     const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([])
     const [searchTerm, setSearchTerm] = useState("")
-    const [selectedRepository, setSelectedRepository] = useState<Repository | null>(null)
     const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
     const [viewMode, setViewMode] = useState<"grid" | "list">("list")
     const [sortBy, setSortBy] = useState("name")
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
     const [loading, setLoading] = useState(true)
+    const router = useRouter()
+
+    const handleViewDetail = (id: string) => {
+        router.push(`/catalog/${id}`)
+    }
 
     useEffect(() => {
         const loadRepositories = async () => {
@@ -30,6 +34,7 @@ export function RepositoryCatalog() {
                 const data = getProcessedRepositories()
                 setRepositories(data)
                 setFilteredRepositories(data)
+                console.log(data)
             } catch (error) {
                 console.error("加载仓库数据失败:", error)
             } finally {
@@ -99,10 +104,6 @@ export function RepositoryCatalog() {
     const handleResetSearch = () => {
         setSearchTerm("")
         setFilteredRepositories(repositories)
-    }
-
-    if (selectedRepository) {
-        return <RealRepositoryDetail repository={selectedRepository} onBack={() => setSelectedRepository(null)} />
     }
 
     if (loading) {
@@ -197,7 +198,7 @@ export function RepositoryCatalog() {
                         repository={repository}
                         expanded={expandedCards.has(repository.id)}
                         onToggle={handleToggleExpand}
-                        onViewDetail={setSelectedRepository}
+                        onViewDetail={handleViewDetail}
                         viewMode={viewMode}
                     />
                 ))}
