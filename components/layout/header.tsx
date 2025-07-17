@@ -1,10 +1,9 @@
 "use client"
 
-import { BarChart3, Bell, Database, GitCompare, Home, Menu, Search, User, Webhook } from "lucide-react"
+import { BarChart3, Bell, Database, Home, Menu, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import {
     DropdownMenu,
@@ -21,6 +20,7 @@ import {
     NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import { cn } from "@/lib/utils"
+import Logo from "@/components/Logo";
 
 interface HeaderProps {
     onMenuClick: () => void
@@ -56,21 +56,7 @@ const navItems: NavItem[] = [
         icon: BarChart3,
         href: "/dashboard",
         description: "统计和分析",
-    },
-    {
-        id: "comparison",
-        label: "对比分析",
-        icon: GitCompare,
-        href: "/comparison",
-        description: "仓库对比工具",
-    },
-    {
-        id: "export",
-        label: "数据服务",
-        icon: Webhook,
-        href: "/services",
-        description: "API接口和开发文档",
-    },
+    }
 ]
 
 export function Header({ onMenuClick }: HeaderProps) {
@@ -79,7 +65,7 @@ export function Header({ onMenuClick }: HeaderProps) {
     return (
         <header
             className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-            <div className="container flex h-16 items-center mx-auto max-w-7xl">
+            <div className="container flex h-16 items-center mx-auto max-w-6xl justify-between">
                 {/* Mobile menu button */}
                 <Button variant="ghost" size="sm" className="md:hidden mr-2" onClick={onMenuClick}>
                     <Menu className="h-5 w-5" />
@@ -88,70 +74,49 @@ export function Header({ onMenuClick }: HeaderProps) {
                 {/* Logo */}
                 {/* 方案四：立体科技风格 */}
                 {/* 方案一：DNA螺旋数据风格 - 独特的科学主题 */}
-                <Link href="/" className="flex items-center space-x-3 mr-6 group">
-                    <div
-                        className="relative h-10 w-10 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center border border-blue-200 overflow-hidden">
-                        {/* 原子轨道环 */}
-                        <div className="absolute inset-2 border border-blue-300 rounded-full opacity-60"></div>
-                        <div
-                            className="absolute inset-1 border border-blue-400 rounded-full opacity-40 transform rotate-45"></div>
-                        <div
-                            className="absolute inset-3 border border-blue-500 rounded-full opacity-80 transform -rotate-45"></div>
-                        {/* 中心原子核 */}
-                        <div
-                            className="relative z-10 h-3 w-3 bg-blue-500 rounded-full flex items-center justify-center">
-                            <div className="h-1.5 w-1.5 bg-white rounded-full"></div>
-                        </div>
-                        {/* 电子 */}
-                        <div className="absolute top-2 right-3 h-1 w-1 bg-blue-600 rounded-full animate-spin"></div>
-                        <div className="absolute bottom-3 left-2 h-1 w-1 bg-blue-400 rounded-full animate-spin"
-                             style={{ animationDirection: 'reverse' }}></div>
-                    </div>
-                    <div className="hidden sm:block">
-                        <h1 className="text-lg font-semibold text-gray-900">科学数据库中心</h1>
-                        <p className="text-xs text-gray-500">Scientific Data Repository Hub</p>
-                    </div>
-                </Link>
                 {/* Desktop Navigation */}
-                <NavigationMenu className="hidden md:flex">
-                    <NavigationMenuList>
-                        {navItems.map((item) => {
-                            const isActive = pathname === item.href
-                            return (
-                                <NavigationMenuItem key={item.id}>
-                                    <Link href={item.href} legacyBehavior passHref>
-                                        <NavigationMenuLink
-                                            className={cn(
-                                                "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 bg-transparent",
-                                                isActive && "bg-accent text-accent-foreground",
-                                            )}
-                                        >
-                                            <item.icon className="mr-2 h-4 w-4" />
-                                            {item.label}
-                                            {item.badge && (
-                                                <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
-                                                    {item.badge}
-                                                </Badge>
-                                            )}
-                                        </NavigationMenuLink>
-                                    </Link>
-                                </NavigationMenuItem>
-                            )
-                        })}
-                    </NavigationMenuList>
-                </NavigationMenu>
-
-                {/* Search bar */}
-                <div className="flex-1 max-w-md mx-4">
-                    <div className="relative">
-                        <Search
-                            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="搜索数据仓库..." className="pl-10 bg-background" />
-                    </div>
+                <div className="flex-1 md:flex ">
+                    <Logo />
+                    <NavigationMenu className="hidden md:flex">
+                        <NavigationMenuList>
+                            {navItems.map((item) => {
+                                const isActive = pathname === item.href
+                                return (
+                                    <NavigationMenuItem key={item.id}>
+                                        <Link href={item.href} legacyBehavior passHref>
+                                            <NavigationMenuLink
+                                                className={cn(
+                                                    "group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 bg-transparent",
+                                                    isActive && "bg-accent text-accent-foreground",
+                                                )}
+                                            >
+                                                <item.icon className="mr-2 h-4 w-4" />
+                                                {item.label}
+                                                {item.badge && (
+                                                    <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
+                                                        {item.badge}
+                                                    </Badge>
+                                                )}
+                                            </NavigationMenuLink>
+                                        </Link>
+                                    </NavigationMenuItem>
+                                )
+                            })}
+                        </NavigationMenuList>
+                    </NavigationMenu>
                 </div>
 
+                {/* Search bar */}
+                {/*<div className="flex-1 max-w-md mx-4">*/}
+                {/*    <div className="relative">*/}
+                {/*        <Search*/}
+                {/*            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />*/}
+                {/*        <Input placeholder="搜索数据仓库..." className="pl-10 bg-background" />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+
                 {/* Right side actions */}
-                <div className="flex items-center space-x-2">
+                <div className="flex  space-x-2 justify-end">
                     {/* Notifications */}
                     <Button variant="ghost" size="sm" className="relative">
                         <Bell className="h-5 w-5" />

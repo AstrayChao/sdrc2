@@ -1,18 +1,28 @@
-import { getRepositoryById } from "@/lib/data/real-data";
-import { notFound } from "next/navigation";
+'use client'
 import { RealRepositoryDetail } from "@/components/features/repository/real-repository-detail";
+import React from "react";
+import type { Repository } from "@/types/repository";
+import { useRepositoryDetail } from "@/hooks/use-repository-detail";
 
 interface PageProps {
-    params: Promise<{id: string}>
+    params: Promise<{id: string}>;
 }
 
-export default async function RepositoryDetailPage({ params }: PageProps) {
-    const { id } = await params;
-    const repository = getRepositoryById(id);
-    if (!repository) {
-        notFound()
-    }
+interface ApiResponse {
+    repository: Repository;
+}
 
-    return <RealRepositoryDetail repository={repository} />
+export default function RepositoryDetailPage({ params }: PageProps) {
+    const { id } = React.use(params);
+    console.log(id)
+
+    const { data, isLoading, error } = useRepositoryDetail(id)
+
+    if (isLoading || !data) {
+        return <div>Loading...</div>;
+    }
+    console.log(data)
+
+    return <RealRepositoryDetail repository={data.repository} />
 }
 

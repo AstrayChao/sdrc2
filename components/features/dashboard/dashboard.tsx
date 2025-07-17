@@ -56,7 +56,9 @@ export function Dashboard() {
     const totalRepositories = repositories.length
     const sourceStats = repositories.reduce(
         (acc, repo) => {
-            acc[repo.source] = (acc[repo.source] || 0) + 1
+            repo.from.forEach((source) => {
+                acc[source] = (acc[source] || 0) + 1
+            })
             return acc
         },
         {} as Record<string, number>,
@@ -72,11 +74,10 @@ export function Dashboard() {
 
     // 图表数据
     const sourceChartData = Object.entries(sourceStats).map(([source, count]) => ({
-        name: source === "re3data" ? "re3data" : source === "fairsharing" ? "FAIRsharing" : "GCBR",
+        name: source,
         value: count,
         percentage: ((count / totalRepositories) * 100).toFixed(1),
     }))
-
     const accessTypeData = [
         { name: "开放访问", value: openAccessCount, color: "#10b981" },
         { name: "受限访问", value: totalRepositories - openAccessCount, color: "#f59e0b" },
@@ -198,7 +199,7 @@ export function Dashboard() {
 
             {/* Charts */}
             <Tabs defaultValue="sources" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-4 bg-card/50 backdrop-blur-sm">
+                <TabsList className="grid w-full grid-cols-4   backdrop-blur-sm">
                     <TabsTrigger value="sources">数据源分布</TabsTrigger>
                     <TabsTrigger value="subjects">学科分布</TabsTrigger>
                     <TabsTrigger value="geography">地理分布</TabsTrigger>

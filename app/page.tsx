@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, BarChart3, Database, GitCompare, Globe, Heart, Search, Shield, Users, Zap } from "lucide-react"
+import { ArrowRight, BarChart3, Database, Globe, Search, Shield, Users, Zap } from "lucide-react"
 
 export default function HomePage() {
     const features = [
@@ -50,21 +50,7 @@ export default function HomePage() {
             href: "/dashboard",
             icon: BarChart3,
             color: "bg-secondary text-secondary-foreground",
-        },
-        {
-            title: "我的收藏",
-            description: "管理收藏的数据仓库",
-            href: "/favorites",
-            icon: Heart,
-            color: "bg-accent text-accent-foreground",
-        },
-        {
-            title: "对比分析",
-            description: "比较不同数据仓库特性",
-            href: "/comparison",
-            icon: GitCompare,
-            color: "bg-muted text-muted-foreground",
-        },
+        }
     ]
 
     const stats = [
@@ -75,7 +61,7 @@ export default function HomePage() {
     ]
 
     return (
-        <div className="container space-y-12 ">
+        <div className="container space-y-12 max-w-6xl mx-auto">
             {/* Hero Section */}
             <section className="text-center space-y-8 py-16">
                 <div className="space-y-4">
@@ -165,7 +151,7 @@ export default function HomePage() {
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">选择下方功能快速开始您的数据探索之旅</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2  gap-6">
                     {quickActions.map((action) => (
                         <Card
                             key={action.title}
@@ -193,15 +179,16 @@ export default function HomePage() {
             </section>
 
             {/* CTA Section */}
-            <section className="text-center space-y-8 py-16 bg-gradient-to-r from-primary/5 to-primary/10  rounded-2xl">
+            <section
+                className="px-4 md:px-1 text-center space-y-8 py-8 md:py-16 bg-gradient-to-r from-primary/5 to-primary/10  rounded-2xl">
                 <div className="space-y-4">
-                    <h2 className="text-3xl font-bold text-foreground">准备开始探索了吗？</h2>
-                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-bold text-foreground">准备开始探索了吗？</h2>
+                    <p className="md:text-lg text-muted-foreground max-w-2xl mx-auto">
                         立即访问我们的数据目录，发现适合您研究需求的高质量数据资源
                     </p>
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <Button size="lg" asChild className="px-8 py-3">
+                    <Button size="lg" asChild className="px-4 py-3">
                         <Link href="/catalog">
                             <Search className="h-5 w-5 mr-2" />
                             浏览数据目录

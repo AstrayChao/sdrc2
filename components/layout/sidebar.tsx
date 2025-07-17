@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, ChevronRight, Download, GitCompare, Heart, HelpCircle, Home, Settings, X } from "lucide-react"
+import { BarChart3, ChevronRight, HelpCircle, Home, Settings, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
@@ -36,28 +36,6 @@ const navItems: NavItem[] = [
         icon: BarChart3,
         href: "/dashboard",
         description: "统计和分析",
-    },
-    {
-        id: "favorites",
-        label: "我的收藏",
-        icon: Heart,
-        href: "/favorites",
-        description: "收藏的仓库",
-        badge: "3",
-    },
-    {
-        id: "comparison",
-        label: "对比分析",
-        icon: GitCompare,
-        href: "/comparison",
-        description: "仓库对比工具",
-    },
-    {
-        id: "export",
-        label: "数据导出",
-        icon: Download,
-        href: "/export",
-        description: "导出和下载",
     },
 ]
 
@@ -156,7 +134,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     {/* Footer info */}
                     <div className="border-t p-4">
                         <div className="text-xs text-muted-foreground">
-                            <p className="font-medium">科学数据中心</p>
+                            <p className="font-medium">科学数据库权威目录</p>
                             <p>版本 1.0.0</p>
                         </div>
                     </div>

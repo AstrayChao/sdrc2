@@ -1,112 +1,91 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Grid, List, Search, SortAsc, SortDesc } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RealRepositoryCard } from "./real-repository-card"
-import { AdvancedSearch } from "../search/advanced-search"
-import { getProcessedRepositories, searchRepositories, sourcePriority } from "@/lib/data/real-data"
-import type { Repository } from "@/types/repository"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Grid, List, Search, SortAsc, SortDesc } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RealRepositoryCard } from "./real-repository-card";
+import { AdvancedSearch } from "../search/advanced-search";
+import type { Repository } from "@/types/repository";
 import { useRouter } from "next/navigation";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
+interface ApiResponse {
+    repositories: Repository[];
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    };
+}
 
 export function RepositoryCatalog() {
-    const [repositories, setRepositories] = useState<Repository[]>([])
-    const [filteredRepositories, setFilteredRepositories] = useState<Repository[]>([])
-    const [searchTerm, setSearchTerm] = useState("")
-    const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
-    const [viewMode, setViewMode] = useState<"grid" | "list">("list")
-    const [sortBy, setSortBy] = useState("name")
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
-    const [loading, setLoading] = useState(true)
-    const router = useRouter()
+    const [searchTerm, setSearchTerm] = useState("");
+    const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
+    const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+    const [sortBy, setSortBy] = useState("name");
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+    const [page, setPage] = useState(1);
+    const router = useRouter();
 
+    const { data, isLoading, error } = useQuery<ApiResponse>({
+        queryKey: ["repositories", { searchTerm, sortBy, sortOrder, page }],
+        queryFn: async () => {
+            const params = new URLSearchParams();
+            if (searchTerm) params.set("q", searchTerm);
+            params.set("page", page.toString());
+            params.set("limit", "20");
+            params.set("sortBy", sortBy);
+            params.set("sortOrder", sortOrder);
+
+            const res = await fetch(`/api/repositories?${params.toString()}`);
+            if (!res.ok) throw new Error("Failed to fetch repositories");
+            return res.json();
+        },
+    });
+
+    const repositories = data?.repositories || [];
+    const pagination = data?.pagination || { page: 1, limit: 20, total: 0, totalPages: 1 };
     const handleViewDetail = (id: string) => {
-        router.push(`/catalog/${id}`)
-    }
+        router.push(`/catalog/${id}`);
+    };
 
-    useEffect(() => {
-        const loadRepositories = async () => {
-            try {
-                const data = getProcessedRepositories()
-                setRepositories(data)
-                setFilteredRepositories(data)
-                console.log(data)
-            } catch (error) {
-                console.error("加载仓库数据失败:", error)
-            } finally {
-                setLoading(false)
-            }
-        }
-        loadRepositories()
-    }, [])
-
-    useEffect(() => {
-        const filtered = repositories.filter(
-            (repo) =>
-                repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                repo.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                repo.subjects?.some((subject) => subject.toLowerCase().includes(searchTerm.toLowerCase())),
-        )
-
-        // Sort repositories
-        filtered.sort((a, b) => {
-            let aValue = ""
-            let bValue = ""
-
-            switch (sortBy) {
-                case "name":
-                    aValue = a.name
-                    bValue = b.name
-                    break
-                case "lastUpdate":
-                    aValue = a.lastUpdate || ""
-                    bValue = b.lastUpdate || ""
-                    break
-                case "source":
-                    const aMin = Math.min(...(a.from?.map(s => sourcePriority[s] ?? Infinity) || [Infinity]))
-                    const bMin = Math.min(...(b.from?.map(s => sourcePriority[s] ?? Infinity) || [Infinity]))
-                    return sortOrder === "asc" ? aMin - bMin : bMin - aMin
-                default:
-                    aValue = a.name
-                    bValue = b.name
-            }
-            if (sortBy !== "source") {
-                const comparison = aValue.localeCompare(bValue)
-                return sortOrder === "asc" ? comparison : -comparison
-            }
-            return 0
-        })
-
-        setFilteredRepositories(filtered)
-    }, [repositories, searchTerm, sortBy, sortOrder])
+    const handlePageChange = (newPage: number) => {
+        setPage(newPage);
+    };
 
     const handleToggleExpand = (id: string) => {
-        const newExpanded = new Set(expandedCards)
+        const newExpanded = new Set(expandedCards);
         if (newExpanded.has(id)) {
-            newExpanded.delete(id)
+            newExpanded.delete(id);
         } else {
-            newExpanded.add(id)
+            newExpanded.add(id);
         }
-        setExpandedCards(newExpanded)
-    }
+        setExpandedCards(newExpanded);
+    };
 
     const handleAdvancedSearch = (searchParams: any) => {
-        // Implement advanced search logic
-        const result = searchRepositories(searchParams.keyword, searchParams)
-        setFilteredRepositories(result)
-        console.log("高级搜索参数:", searchParams)
-    }
+        setSearchTerm(searchParams.keyword || "");
+        setPage(1);
+    };
 
     const handleResetSearch = () => {
-        setSearchTerm("")
-        setFilteredRepositories(repositories)
-    }
+        setSearchTerm("");
+        setPage(1);
+    };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center space-y-4">
@@ -114,10 +93,10 @@ export function RepositoryCatalog() {
                     <p className="text-muted-foreground">正在加载数据仓库...</p>
                 </div>
             </div>
-        )
+        );
     }
     return (
-        <div className="container space-y-6">
+        <div className="container space-y-6 max-w-6xl mx-auto">
             {/* Header */}
             <div className="text-center space-y-4">
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground">科学数据仓库目录</h1>
@@ -125,9 +104,7 @@ export function RepositoryCatalog() {
                     发现和探索全球科学数据仓库，包含来自 re3data、FAIRsharing 和 GCBR 的综合数据
                 </p>
                 <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-                    <Badge className="px-3 py-1">
-                        {filteredRepositories.length} 个数据库
-                    </Badge>
+                    <Badge className="px-3 py-1">{pagination.total} 个数据库</Badge>
                     <Badge variant="outline" className="px-3 py-1">
                         {new Set(repositories.flatMap((r) => r.from || [])).size} 个数据源
                     </Badge>
@@ -159,8 +136,10 @@ export function RepositoryCatalog() {
                                 <SelectItem value="source">数据源</SelectItem>
                             </SelectContent>
                         </Select>
-                        <Button variant="outline" size="sm"
-                                onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}>
                             {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
                         </Button>
                     </div>
@@ -173,38 +152,45 @@ export function RepositoryCatalog() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                         <Button
-                            variant={viewMode === "list" ? "default" : "outline"} size="sm"
+                            variant={viewMode === "list" ? "default" : "outline"}
+                            size="sm"
                             onClick={() => setViewMode("list")}>
                             <List className="h-4 w-4 mr-2" />
                             列表视图
                         </Button>
-                        <Button variant={viewMode === "grid" ? "default" : "outline"} size="sm"
-                                onClick={() => setViewMode("grid")}>
+                        <Button
+                            variant={viewMode === "grid" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setViewMode("grid")}>
                             <Grid className="h-4 w-4 mr-2" />
                             网格视图
                         </Button>
                     </div>
-                    <div className="text-sm text-muted-foreground">显示 {filteredRepositories.length} 个结果</div>
+                    <div className="text-sm text-muted-foreground">
+                        显示 {pagination.total} 个结果 (第 {pagination.page}/{pagination.totalPages} 页)
+                    </div>
                 </div>
             </div>
 
             {/* Results */}
             <div
-                className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"}`}
-            >
-                {filteredRepositories.map((repository) => (
-                    <RealRepositoryCard
-                        key={repository.id}
-                        repository={repository}
-                        expanded={expandedCards.has(repository.id)}
-                        onToggle={handleToggleExpand}
-                        onViewDetail={handleViewDetail}
-                        viewMode={viewMode}
-                    />
-                ))}
+                className={`grid gap-6 ${
+                    viewMode === "grid" ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+                }`}>
+                {repositories.map((repository) => (
+                        <RealRepositoryCard
+                            key={repository.id}
+                            repository={repository}
+                            expanded={expandedCards.has(repository.id!)}
+                            onToggle={handleToggleExpand}
+                            onViewDetail={handleViewDetail}
+                            viewMode={viewMode}
+                        />
+                    )
+                )}
             </div>
 
-            {filteredRepositories.length === 0 && (
+            {repositories.length === 0 && !isLoading && (
                 <div className="text-center py-12 bg-muted/30 rounded-xl">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
                         <Search className="h-8 w-8 text-primary" />
@@ -218,6 +204,42 @@ export function RepositoryCatalog() {
                     </Button>
                 </div>
             )}
+            {pagination.totalPages > 1 && (
+                <Pagination className="mt-8">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={page === 1 ? undefined : () => handlePageChange(Math.max(1, page - 1))}
+                                className={page === 1 ? "opacity-50 cursor-not-allowed" : ""}
+                            />
+                        </PaginationItem>
+
+                        {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                            const pageNum = Math.max(1, Math.min(
+                                pagination.totalPages - 4,
+                                page - 2
+                            )) + i
+                            return (
+                                <PaginationItem key={pageNum}>
+                                    <PaginationLink
+                                        isActive={pageNum === page}
+                                        onClick={() => handlePageChange(pageNum)}
+                                    >
+                                        {pageNum}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            )
+                        })}
+
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={page === pagination.totalPages ? undefined : () => handlePageChange(Math.min(pagination.totalPages, page + 1))}
+                                className={page === pagination.totalPages ? "opacity-50 cursor-not-allowed" : ""}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
         </div>
-    )
+    );
 }

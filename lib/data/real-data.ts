@@ -876,6 +876,8 @@ const realRepositories: Repository[] = [
             "COSMIC, the Catalogue Of Somatic Mutations In Cancer, is the world's largest and most comprehensive resource for exploring the impact of somatic mutations in human cancer.",
         url: "https://cancer.sanger.ac.uk/",
         from: getRandomSources(),
+        type: "学科型",
+        countries: ["United Kingdom"],
         subjects: ["Cancer Genomics", "Somatic Mutations", "Oncology", "Medical Genetics"],
         contentTypes: ["Mutation data", "Cancer genomics data", "Clinical data", "Drug sensitivity data"],
         keywords: ["cancer", "somatic mutations", "oncology", "genomics", "tumors"],
@@ -918,7 +920,7 @@ const realRepositories: Repository[] = [
                 policyURL: "https://www.cosmic.sanger.ac.uk/data-access-policy/",
             }
         ],
-        repositoryContact: ["cosmic@sanger.ac.uk"],
+        repositoryContact: ["cosmic@sanger.ac.uk", "dxclmrl@outlook.com"],
         certificates: ["Trusted Digital Repository", "中国科学院总中心"],
         dataAccess: [
             {
@@ -945,7 +947,7 @@ const realRepositories: Repository[] = [
                 value: "https://cancer.sanger.ac.uk/cosmic/api",
             },
         ],
-        repositoryIdentifier: ["RRID:SCR_002260", "DOI:10.22222.333/sf "],
+        repositoryIdentifier: ["RRID:SCR_002260", "DOI:10.22222.333/sf"],
         pidSystem: ["DOI", "CSTR"],
         aidSystem: ["CSTR", "ORCID"],
         qualityManagement: "yes",

@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import type { Repository } from "@/types/repository"
-import { getSourceInfo, sourcePriority } from "@/lib/data/real-data";
+import { getSourceInfo, sourcePriority } from "@/lib/data/real-data"
 
 interface RealRepositoryCardProps {
     repository: Repository
@@ -46,6 +46,7 @@ export function RealRepositoryCard({
             } ${viewMode === "list" ? "flex-row" : ""}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => repository.id && onViewDetail(repository.id)}
         >
             <CardHeader className={`${viewMode === "list" ? "flex-1" : ""} pb-4`}>
                 <div className="flex items-start justify-between gap-4">
@@ -56,7 +57,11 @@ export function RealRepositoryCard({
                             <div className="flex items-center gap-2 flex-wrap pb-1">
                                 {
                                     repository.type && <Badge variant={"outline"}>
-                                        {repository.type}
+                                        {repository.type?.map((item) => (
+                                            <div key={item}>
+                                                <span className="capitalize">{item}</span>
+                                            </div>
+                                        ))}
                                     </Badge>
                                 }
                                 {repository.dataAccess?.some((access) => access.dataAccessType === "open") ? (
@@ -75,12 +80,12 @@ export function RealRepositoryCard({
                                 }
                             </div>
                             <span className={"font-sans  transition-all duration-300 hover:text-primary"}
-                                  onClick={() => onViewDetail(repository.id)}>
-                                {repository.name}
+                                  onClick={() => repository.id && onViewDetail(repository.id)}>
+                                {repository.repositoryName}
                             </span>
                             <div className={"flex gap-x-2 pt-1"}>
-                                {repository.additionalNames &&
-                                    repository.additionalNames.slice(0, viewMode === "list" ? 5 : 2).map((name, idx) => (
+                                {repository.additionalName &&
+                                    repository.additionalName.slice(0, viewMode === "list" ? 5 : 2).map((name: any, idx) => (
                                         <Badge key={idx} variant="outline" className="text-xs">
                                             {name}
                                         </Badge>
@@ -104,14 +109,14 @@ export function RealRepositoryCard({
                             {viewMode === "list" && repository.size && (
                                 <div className="flex items-center gap-1  line-clamp-1">
                                     <Database className="h-3 w-3" />
-                                    <span>{repository.size}</span>
+                                    <span>{repository.size?.value}</span>
                                 </div>
                             )}
 
-                            {repository.institutions && repository.institutions.length > 0 && (
+                            {repository.institution && repository.institution.length > 0 && (
                                 <div className="flex items-center gap-1 text-nowrap">
                                     <Building className="h-3 w-3" />
-                                    <span>{repository.institutions.length} 机构</span>
+                                    <span>{repository.institution.length} 机构</span>
                                 </div>
                             )}
 
@@ -141,20 +146,24 @@ export function RealRepositoryCard({
                         {/* Subject tags */}
                         <div
                             className={`flex gap-2  ${viewMode === "list" ? "flex-wrap" : "flex-nowrap flex-col"}`}>
-                            {repository.subjects?.slice(0, viewMode === "list" ? 5 : 2).map((subject) => (
-                                <Badge
-                                    key={subject}
-                                    variant={"secondary"}
-                                    className="text-xs w-fit bg-secondary/50  text-secondary-foreground hover:bg-secondary/90 transition-colors"
-                                >
-                                    <Tag className="h-3 w-3 mr-1" />
-                                    {subject}
-                                </Badge>
-                            ))}
+                            {repository.subject?.slice(0, viewMode === "list" ? 5 : 2).map((subject: any, idx) => {
+                                const subjectValue = typeof subject === 'string' ? subject :
+                                    (subject as any)?.value || String(subject)
+                                return (
+                                    <Badge
+                                        key={idx}
+                                        variant={"secondary"}
+                                        className="text-xs w-fit bg-secondary/50  text-secondary-foreground hover:bg-secondary/90 transition-colors"
+                                    >
+                                        <Tag className="h-3 w-3 mr-1" />
+                                        {subjectValue}
+                                    </Badge>
+                                )
+                            })}
 
-                            {viewMode === "list" && repository.subjects && repository.subjects.length > (viewMode === "list" ? 5 : 2) && (
+                            {viewMode === "list" && repository.subject && repository.subject.length > (viewMode === "list" ? 5 : 2) && (
                                 <Badge variant="outline" className="text-xs border-border text-muted-foreground">
-                                    +{repository.subjects.length - (viewMode === "list" ? 5 : 2)} 更多
+                                    +{repository.subject.length - (viewMode === "list" ? 5 : 2)} 更多
                                 </Badge>
                             )}
 
@@ -187,14 +196,14 @@ export function RealRepositoryCard({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Institution info */}
-                        {repository.institutions && repository.institutions.length > 0 && (
+                        {repository.institution && repository.institution.length > 0 && (
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <Building className="h-4 w-4 text-primary" />
                                     <span className="text-sm font-medium text-card-foreground">关联机构</span>
                                 </div>
                                 <div className="space-y-2">
-                                    {repository.institutions.slice(0, 3).map((inst, index) => (
+                                    {repository.institution.slice(0, 3).map((inst: any, index: number) => (
                                         <div key={index} className="flex items-center gap-2 text-sm">
                                             <MapPin className="h-3 w-3 text-muted-foreground" />
                                             <span className="text-muted-foreground">
@@ -204,9 +213,9 @@ export function RealRepositoryCard({
                       </span>
                                         </div>
                                     ))}
-                                    {repository.institutions.length > 3 && (
+                                    {repository.institution.length > 3 && (
                                         <div className="text-xs text-muted-foreground">
-                                            还有 {repository.institutions.length - 3} 个机构...
+                                            还有 {repository.institution.length - 3} 个机构...
                                         </div>
                                     )}
                                 </div>
@@ -214,14 +223,14 @@ export function RealRepositoryCard({
                         )}
 
                         {/* Content types */}
-                        {repository.contentTypes && repository.contentTypes.length > 0 && (
+                        {repository.contentType && repository.contentType.length > 0 && (
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <Database className="h-4 w-4 text-primary" />
                                     <span className="text-sm font-medium text-card-foreground">内容类型</span>
                                 </div>
                                 <div className="flex flex-wrap gap-1">
-                                    {repository.contentTypes.slice(0, 4).map((type) => (
+                                    {repository.contentType.slice(0, 4).map((type: any) => (
                                         <Badge
                                             key={type}
                                             variant="outline"
@@ -230,10 +239,10 @@ export function RealRepositoryCard({
                                             {type}
                                         </Badge>
                                     ))}
-                                    {repository.contentTypes.length > 4 && (
+                                    {repository.contentType.length > 4 && (
                                         <Badge variant="outline"
                                                className="text-xs border-border text-muted-foreground">
-                                            +{repository.contentTypes.length - 4}
+                                            +{repository.contentType.length - 4}
                                         </Badge>
                                     )}
                                 </div>
@@ -257,9 +266,9 @@ export function RealRepositoryCard({
                         size="sm"
                         onClick={(e) => {
                             e.stopPropagation()
-                            onViewDetail(repository.id)
+                            repository.id && onViewDetail(repository.id)
                         }}
-                        className="border-border text-card-foreground hover:bg-accent"
+                        className="border-border   text-card-foreground hover:bg-accent"
                     >
                         查看详情
                     </Button>
@@ -269,7 +278,7 @@ export function RealRepositoryCard({
                         size="sm"
                         onClick={(e) => {
                             e.stopPropagation()
-                            onToggle(repository.id)
+                            repository.id && onToggle(repository.id)
                         }}
                         className="text-muted-foreground hover:text-foreground"
                     >

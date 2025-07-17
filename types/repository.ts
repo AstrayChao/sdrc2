@@ -1,96 +1,190 @@
+import { ObjectId } from "mongodb";
+
 export type Source = "re3data" | "FAIRsharing" | "GCBR"
+
+export interface Repository {
+    id?: string
+    re3dataId?: string
+    repositoryName: string
+    additionalName?: string[]
+    repositoryURL: string
+    repositoryIdentifier?: string[]
+    description: string
+    repositoryContact?: string[]
+    type?: string[]
+    countries?: string[]
+    size?: {value: string; updated?: string}
+    startDate?: string | null
+    endDate?: string | null
+    repositoryLanguage?: string[]
+    subject?: string[]
+    missionStatementURL?: string
+    contentType?: string[]
+    providerType?: string[]
+    keyword?: string[]
+    institution?: Array<{
+        institutionName: string
+        institutionAdditionalName?: string[]
+        institutionCountry?: string
+        responsibilityType?: string[]
+        institutionType?: string
+        institutionURL?: string
+        institutionIdentifier?: string[]
+        responsibilityStartDate?: string | null
+        responsibilityEndDate?: string | null
+        institutionContact?: string[]
+    }>
+    policy?: Array<{
+        policyName: string
+        policyURL: string
+    }>
+    databaseAccess?: {
+        databaseAccessType: "open" | "restricted" | "closed"
+        databaseAccessRestriction?: string[]
+    }
+    databaseLicense?: Array<{
+        databaseLicenseName: string
+        databaseLicenseURL?: string
+    }>
+    dataAccess?: Array<{
+        dataAccessType: "open" | "restricted" | "closed"
+        dataAccessRestriction?: string[]
+    }>
+    dataLicense?: Array<{
+        dataLicenseName: string
+        dataLicenseURL?: string
+    }>
+    dataUpload?: Array<{
+        dataUploadType: string
+        dataUploadRestriction?: string[]
+    }>
+    dataUploadLicense?: Array<{
+        dataUploadLicenseName: string
+        dataUploadLicenseURL?: string
+    }>
+    software?: Array<{
+        softwareName: string
+    }>
+    versioning?: string
+    api?: Array<{
+        value: string
+        apiType?: string
+    }>
+    pidSystem?: string[]
+    citationGuidelineURL?: string
+    aidSystem?: string[]
+    enhancedPublication?: string
+    qualityManagement?: string
+    certificate?: string[]
+    metadataStandard?: Array<{
+        metadataStandardName: string
+        metadataStandardURL?: string
+    }>
+    syndication?: string[]
+    remarks?: string
+    entryDate?: string
+    lastUpdate?: string
+    from: Source[]
+    deprecationReason?: string
+}
+
+export interface RepositoryDocument {
+    _id: ObjectId;
+    id?: string;
+    re3dataId?: string;
+    repositoryName: {value: string; language?: string} | string;
+    additionalName?: Array<{value: string; language?: string}>;
+    repositoryURL: string;
+    repositoryIdentifier?: string[];
+    description: {value: string; language?: string} | string;
+    repositoryContact?: string[];
+    type?: string[];
+    countries?: string[];
+    size?: {value: string; updated?: string};
+    startDate?: string | null;
+    endDate?: string | null;
+    repositoryLanguage?: string[];
+    subject?: Array<{
+        value: string;
+        subjectScheme?: string;
+    }>;
+    missionStatementURL?: string;
+    contentType?: Array<{
+        value: string;
+        contentTypeScheme?: string;
+    }>;
+    providerType?: string[];
+    keyword?: string[];
+    institution?: Array<{
+        institutionName: {value: string; language?: string};
+        institutionAdditionalName?: Array<{value: string; language?: string}>;
+        institutionCountry?: string;
+        responsibilityType?: string[];
+        institutionType?: string;
+        institutionURL?: string;
+        institutionIdentifier?: string[];
+        responsibilityStartDate?: string | null;
+        responsibilityEndDate?: string | null;
+        institutionContact?: string[];
+    }>;
+    policy?: Array<{
+        policyName: string;
+        policyURL: string;
+    }>;
+    databaseAccess?: {
+        databaseAccessType: "open" | "restricted" | "closed";
+        databaseAccessRestriction?: string[];
+    };
+    databaseLicense?: Array<{
+        databaseLicenseName: string;
+        databaseLicenseURL?: string;
+    }>;
+    dataAccess?: Array<{
+        dataAccessType: "open" | "restricted" | "closed";
+        dataAccessRestriction?: string[];
+    }>;
+    dataLicense?: Array<{
+        dataLicenseName: string;
+        dataLicenseURL?: string;
+    }>;
+    dataUpload?: Array<{
+        dataUploadType: string;
+        dataUploadRestriction?: string[];
+    }>;
+    dataUploadLicense?: Array<{
+        dataUploadLicenseName: string;
+        dataUploadLicenseURL?: string;
+    }>;
+    software?: Array<{
+        softwareName: string;
+    }>;
+    versioning?: string;
+    api?: Array<{
+        value: string;
+        apiType?: string;
+    }>;
+    pidSystem?: string[];
+    citationGuidelineURL?: string;
+    aidSystem?: string[];
+    enhancedPublication?: string;
+    qualityManagement?: string;
+    certificate?: string[];
+    metadataStandard?: Array<{
+        metadataStandardName: {value: string; metadataStandardScheme?: string};
+        metadataStandardURL?: string;
+    }>;
+    fairsharing?: any;
+    syndication?: string[];
+    remarks?: string;
+    entryDate?: string;
+    lastUpdate?: string;
+    from: Source[];
+    deprecationReason?: string;
+}
+
 
 export function isSource(value: any): value is Source {
     if (typeof value !== 'string') return false
     const normalized = value.trim().toLowerCase()
     return ['re3data', 'fairsharing', 'gcbr'].includes(normalized)
-}
-
-export interface Repository {
-    id: string
-    name: string
-    description: string
-    url: string
-    from: Source[]
-    subjects?: string[]
-    type?: string
-    countries?: string[]
-    institutions?: Institution[]
-    contentTypes?: string[]
-    dataAccess?: DataAccess[]
-    dataLicense?: DataLicense[]
-    api?: ApiInfo[]
-    repositoryIdentifier?: string[]
-    size?: string
-    startDate?: string
-    endDate?: string | null
-    lastUpdate?: string
-    repositoryContact?: string[]
-    certificates?: string[]
-    additionalNames?: string[]
-    keywords?: string[]
-    dataUploadLicense?: DataUploadLicense[]
-    deprecationReason?: string
-    policy?: Policy[]
-    versioning?: string
-    databaseLicense?: DatabaseLicense[]
-    dataUpload?: DataUpload[]
-    pidSystem?: string[]
-    aidSystem?: string[]
-    qualityManagement?: string
-    metadataStandard?: MetadataStandard[]
-}
-
-export interface MetadataStandard {
-    metadataStandardName: string
-    metadataStandardURL: string
-}
-
-export interface DataUpload {
-    dataUploadType: string
-    dataUploadRestriction: string[]
-}
-
-export interface DatabaseLicense {
-    databaseLicenseName: string
-    databaseLicenseURL: string
-}
-
-export interface DataUploadLicense {
-    dataUploadLicenseName: string
-    dataUploadLicenseURL?: string
-}
-
-export interface Policy {
-    policyName: string
-    policyURL: string
-}
-
-
-export interface Institution {
-    institutionName: string
-    institutionType?: string
-    institutionCountry?: string
-    institutionURL?: string
-    institutionIdentifier?: string[]
-    institutionContact?: string[]
-    institutionAdditionalNames?: string[]
-    responsibilityType?: string[]
-    coordinates?: [number, number]
-}
-
-
-export interface DataLicense {
-    dataLicenseName: string
-    dataLicenseURL?: string
-}
-
-export interface ApiInfo {
-    apiType?: string
-    value: string
-}
-
-export interface DataAccess {
-    dataAccessType: "open" | "restricted" | "closed"
-    dataAccessRestriction?: string[]
 }
