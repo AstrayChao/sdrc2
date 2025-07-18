@@ -1,189 +1,73 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { z } from "zod";
-import { connectToDatabase } from "@/lib/db";
-import { RepositoryDocument } from "@/types/repository";
-import { extractArrayValues, extractValue } from "@/lib/utils";
+import { createErrorResponse, createSuccessResponse } from "@/lib/api/response";
+import { getRepositories } from "@/lib/db/repo";
 
+// 请求参数验证模式
 const searchParamsSchema = z.object({
     q: z.string().optional(),
     page: z.coerce.number().min(1).default(1),
     limit: z.coerce.number().min(1).max(100).default(20),
     source: z.enum(["re3data", "fairsharing", "gcbr", "all"]).default("all"),
     subjects: z.string().optional(),
+    sortBy: z.enum(["name", "lastUpdate", "source"]).default("name"),
+    sortOrder: z.enum(["asc", "desc"]).default("asc"),
+    from: z.string().optional(),
+    contentTypes: z.string().optional(),
+    accessTypes: z.string().optional(),
+    countries: z.string().optional(),
+    institutionTypes: z.string().optional(),
+    startYear: z.string().optional(),
+    hasCertificates: z.boolean().optional(),
+    hasAPI: z.boolean().optional(),
 });
-
-const repositorySchema = z.object({
-    name: z.string().min(1),
-    description: z.string().min(1),
-    url: z.string().url(),
-    from: z.array(z.enum(["re3data", "FAIRsharing", "GCBR"])),
-    subjects: z.array(z.string()).optional(),
-    keywords: z.array(z.string()).optional(),
-});
-
 
 export async function GET(request: NextRequest) {
     try {
+        // 解析和验证请求参数
         const { searchParams } = new URL(request.url);
-        const params = searchParamsSchema.parse(Object.fromEntries(searchParams));
 
-        const { db } = await connectToDatabase();
-        const collection = db.collection<RepositoryDocument>("final");
-
-        let query: any = {};
-
-        // 基础搜索过滤
-        if (params.q) {
-            query.$or = [
-                { repositoryName: { $regex: params.q, $options: "i" } },
-                { description: { $regex: params.q, $options: "i" } },
-                { subjects: { $regex: params.q, $options: "i" } },
-                { keywords: { $regex: params.q, $options: "i" } },
-            ];
-        }
-
-        // 数据源过滤
-        if (params.source !== "all") {
-            query.from = { $in: [params.source] };
-        }
-
-        // 主题过滤
-        if (params.subjects) {
-            const subjects = params.subjects.split(",");
-            query.subjects = { $in: subjects };
-        }
-
-        const total = await collection.countDocuments(query);
-        const repositories = (await collection
-            .find(query)
-            .skip((params.page - 1) * params.limit)
-            .limit(params.limit)
-            .toArray()).map(repo => {
-            const { _id, ...rest } = repo
-
-            // 处理整个文档
-            return {
-                ...rest,
-                id: _id.toString(),
-                repositoryName: extractValue<string>(rest.repositoryName),
-                description: extractValue<string>(rest.description),
-                subject: extractArrayValues<{value: string}>(rest.subject),
-                keyword: extractArrayValues<string>(rest.keyword),
-                contentType: extractArrayValues<{value: string}>(rest.contentType),
-                additionalName: extractArrayValues<{value: string}>(rest.additionalName),
-                institution: rest.institution?.map(inst => ({
-                    ...inst,
-                    institutionName: extractValue<string>(inst.institutionName),
-                    institutionAdditionalName: extractArrayValues<{value: string}>(inst.institutionAdditionalName)
-                }))
-            }
-        });
-
-        return NextResponse.json(
-            {
-                repositories,
-                pagination: {
-                    page: params.page,
-                    limit: params.limit,
-                    total,
-                    totalPages: Math.ceil(total / params.limit),
-                },
-            },
-            {
-                headers: {
-                    "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-                },
-            }
+        const validationResult = searchParamsSchema.safeParse(
+            Object.fromEntries(searchParams)
         );
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            return NextResponse.json({ error: "Invalid parameters", details: error.errors }, { status: 400 });
+
+        if (!validationResult.success) {
+            return createErrorResponse(
+                "Invalid parameters",
+                400,
+                validationResult.error.errors
+            );
         }
 
+        const params = validationResult.data;
+        // 获取仓库数据
+        const result = await getRepositories({
+            q: params.q,
+            page: params.page,
+            limit: params.limit,
+            source: params.source,
+            subjects: params.subjects?.split(",").toString(),
+            sortBy: params.sortBy,
+            sortOrder: params.sortOrder,
+            from: params.from,
+            contentTypes: params.contentTypes?.split(",").toString(),
+            accessTypes: params.accessTypes?.split(",").toString(),
+            institutionTypes: params.institutionTypes?.split(",").toString(),
+            startYear: params.startYear,
+            hasCertificates: params.hasCertificates,
+            hasAPI: params.hasAPI,
+        });
+        return createSuccessResponse({
+            repositories: result.repositories,
+            pagination: {
+                page: params.page,
+                limit: params.limit,
+                total: result.total,
+                totalPages: Math.ceil(result.total / params.limit),
+            },
+        });
+    } catch (error) {
         console.error("API Error:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        return createErrorResponse("Internal server error", 500);
     }
 }
-
-
-// export async function POST(request: NextRequest) {
-//     try {
-//         const body = await request.json();
-//         const repository = repositorySchema.parse(body);
-//
-//         const { db } = await connectToDatabase();
-//         const collection = db.collection<Repository>("final");
-//
-//         const result = await collection.insertOne(repository);
-//
-//         return NextResponse.json(
-//             {
-//                 _id: result.insertedId,
-//                 ...repository,
-//             },
-//             { status: 201 }
-//         );
-//     } catch (error) {
-//         if (error instanceof z.ZodError) {
-//             return NextResponse.json({ error: "Invalid data", details: error.errors }, { status: 400 });
-//         }
-//
-//         console.error("API Error:", error);
-//         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-//     }
-// }
-
-// export async function PUT(request: NextRequest) {
-//     try {
-//         const { searchParams } = new URL(request.url);
-//         const id = searchParams.get("id");
-//         if (!id) {
-//             return NextResponse.json({ error: "Missing repository ID" }, { status: 400 });
-//         }
-//
-//         const body = await request.json();
-//         const repository = repositorySchema.parse(body);
-//
-//         const { db } = await connectToDatabase();
-//         const collection = db.collection<Repository>("final");
-//
-//         const result = await collection.updateOne({ _id: new ObjectId(id) }, { $set: repository });
-//
-//         if (result.matchedCount === 0) {
-//             return NextResponse.json({ error: "Repository not found" }, { status: 404 });
-//         }
-//
-//         return NextResponse.json({ success: true });
-//     } catch (error) {
-//         if (error instanceof z.ZodError) {
-//             return NextResponse.json({ error: "Invalid data", details: error.errors }, { status: 400 });
-//         }
-//
-//         console.error("API Error:", error);
-//         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-//     }
-// }
-
-// export async function DELETE(request: NextRequest) {
-//     try {
-//         const { searchParams } = new URL(request.url)
-//         const id = searchParams.get("id")
-//         if (!id) {
-//             return NextResponse.json({ error: "Missing repository ID" }, { status: 400 })
-//         }
-
-//         const { db } = await connectToDatabase()
-//         const collection = db.collection<Repository>("repositories")
-
-//         const result = await collection.deleteOne({ _id: new ObjectId(id) })
-
-//         if (result.deletedCount === 0) {
-//             return NextResponse.json({ error: "Repository not found" }, { status: 404 })
-//         }
-
-//         return NextResponse.json({ success: true })
-//     } catch (error) {
-//         console.error("API Error:", error)
-//         return NextResponse.json({ error: "Internal server error" }, { status: 500 })
-//     }
-// }

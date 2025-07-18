@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 const geist = Geist({ subsets: ["latin"], display: "swap", variable: "--font-geist" });
 
 export const metadata: Metadata = {
-    title: "科学数据库权威目录",
+    title: "科学数据仓库目录",
     description: "全球领先的科学数据仓库发现平台，帮助研究人员找到、访问和使用高质量的研究数据资源。",
     keywords: ["科学数据仓库", "科学数据", "数据仓库搜索"],
     openGraph: {
@@ -33,17 +33,16 @@ export const metadata: Metadata = {
     authors: [{ name: "CNIC", url: "https://cnic.cn/" }],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: {children: React.ReactNode}) {
     return (
-        <html
-            lang="zh"
-            className={`${inter.variable} ${geistMono.variable} ${notoSansSC.variable} ${geist.variable}`}
-            suppressHydrationWarning>
-            <body>
-                <Providers>
-                    <AppLayout>{children}</AppLayout>
-                </Providers>
-            </body>
+        <html lang="zh"
+              className={`${inter.variable} ${geistMono.variable} ${notoSansSC.variable} ${geist.variable}`}
+              suppressHydrationWarning>
+        <body>
+        <Providers>
+            <AppLayout>{children}</AppLayout>
+        </Providers>
+        </body>
         </html>
     );
 }

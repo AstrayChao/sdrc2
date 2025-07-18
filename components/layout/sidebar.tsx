@@ -134,7 +134,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                     {/* Footer info */}
                     <div className="border-t p-4">
                         <div className="text-xs text-muted-foreground">
-                            <p className="font-medium">科学数据库权威目录</p>
+                            <p className="font-medium">科学数据仓库目录</p>
                             <p>版本 1.0.0</p>
                         </div>
                     </div>

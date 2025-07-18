@@ -19,7 +19,7 @@ export default function Logo() {
                  style={{ animationDelay: '0.5s' }}></div>
         </div>
         <div className="hidden sm:block">
-            <h1 className="text-lg font-semibold text-gray-900">科学数据库权威目录</h1>
+            <h1 className="text-lg font-semibold text-gray-900">科学数据仓库目录</h1>
             <p className="text-xs text-gray-500">Scientific Data Repository Hub</p>
         </div>
     </Link>

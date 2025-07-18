@@ -1,4 +1,4 @@
-// components/RealRepositoryDetail.tsx (服务端组件)
+'use client';
 import {
     AlertTriangle,
     Building,
@@ -15,109 +15,131 @@ import {
     Tag,
     Users,
 } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import type { Repository } from "@/types/repository"
 import { getSourceInfo, sourcePriority } from "@/lib/data/real-data";
 import { Separator } from "@/components/ui/separator";
 import { ExternalLinkButton } from "@/components/ExternalLinkButton"
 import { BackButton } from "@/components/BackButton"
+import { notFound, useRouter } from "next/navigation";
+import { useRepositoryDetail } from "@/hooks/use-repository";
+import { formatDate } from "@/lib/utils";
+import InternalServerErrorPage from "@/app/500";
+import { RepositoryDetailSkeleton } from "@/components/features/repository/skeleton";
 
 interface RealRepositoryDetailProps {
-    repository: Repository
+    repositoryId: string
 }
 
-export function RealRepositoryDetail({ repository }: RealRepositoryDetailProps) {
-    console.log(repository)
+export function RealRepositoryDetail({ repositoryId }: RealRepositoryDetailProps) {
+    const router = useRouter();
+    const { data, isLoading, error } = useRepositoryDetail(repositoryId)
+    if (isLoading) {
+        return (
+            <RepositoryDetailSkeleton />
+        );
+    }
+
+    if (error) {
+        return <InternalServerErrorPage />
+    }
+
+    const repository = data?.data?.repository;
+
+    if (!repository) {
+        return notFound()
+    }
+
     return (
         <div className={"min-h-screen font-sans pb-10"}>
             <div className="max-w-6xl mx-auto space-y-6 px-1 sm:px-6 lg:px-8 ">
                 <div className="flex items-center gap-4 mb-8">
                     <BackButton />
-
-                    <div className="flex items-center gap-2 ml-auto">
-                        <ExternalLinkButton url={repository.repositoryURL} label={"访问该站"} />
-                    </div>
                 </div>
 
                 {/* Description */}
-                <Card className="bg-card/50 backdrop-blur-sm border-border shadow-sm">
-                    <CardHeader>
-                        <div className="flex items-start gap-6">
-                            <div className="flex-1 space-y-4">
-                                <div className="space-y-2">
-                                    <h1 className="text-3xl font-bold  tracking-tight text-foreground">{repository.repositoryName}</h1>
-                                    {repository.additionalName && repository.additionalName.length > 0 && (
-                                        <p className="text-muted-foreground">别名: {repository.additionalName.join(", ")}</p>
-                                    )}
-                                </div>
-                                {repository.deprecationReason && (
-                                    <div
-                                        className="flex items-center mb-4 p-3 rounded-lg text-orange-600 bg-orange-50 dark:bg-orange-950/20">
-                                        <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0" />
-                                        <div>
-                                            <div className="text-sm font-semibold">
-                                                该库已不再维护
-                                            </div>
-                                            <div className="text-sm">
-                                                {repository.deprecationReason}
-                                            </div>
-                                        </div>
-                                    </div>
+                <Card className="bg-card/50 backdrop-blur-sm border-border shadow-sm  ">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                        <div className="space-y-2">
+                            <CardTitle
+                                className="text-3xl font-bold  tracking-tight text-foreground">
+                                {repository.repositoryName}
+                            </CardTitle>
+                            <CardDescription>
+                                {repository.additionalName && repository.additionalName.length > 0 && (
+                                    <p className="text-muted-foreground">别名: {repository.additionalName.join(", ")}</p>
                                 )}
-                                <p className="text-base leading-relaxed text-muted-foreground">
-                                    {repository.description}
-                                </p>
-
-                                {/* Quick Stats */}
-                                <div
-                                    className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
-
-                                    {repository.size && (
-                                        <div className="flex items-center gap-2">
-                                            <Database className="h-4 w-4" />
-                                            <span>{repository.size.value}</span>
-                                        </div>
-                                    )}
-
-                                    {repository.institution && repository.institution.length > 0 && (
-                                        <div className="flex items-center gap-2">
-                                            <Building className="h-4 w-4" />
-                                            <span>{repository.institution.length} 个机构</span>
-                                        </div>
-                                    )}
-
-                                    {repository.startDate && (
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-4 w-4" />
-                                            <span>创建于 {new Date(repository.startDate).toLocaleDateString("zh-CN")}</span>
-                                        </div>
-                                    )}
-
-                                    {repository.lastUpdate && (
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="h-4 w-4" />
-                                            <span>更新于 {new Date(repository.lastUpdate).toLocaleDateString("zh-CN")}</span>
-                                        </div>
-                                    )}
-
-                                    <div className="flex items-center gap-2">
-                                        <Signature className="h-4 w-4 " />
-                                        <div className="flex flex-wrap gap-2">
-                                            平台标识
-                                            {repository.repositoryIdentifier?.map((identifier) => (
-                                                <Badge key={identifier} variant="outline"
-                                                       className="font-mono text-xs px-2 py-0.5 border-border bg-muted/50">
-                                                    {identifier}
-                                                </Badge>
-                                            ))}
-                                        </div>
+                            </CardDescription>
+                        </div>
+                        <CardAction>
+                            <ExternalLinkButton url={repository.repositoryURL} label={"访问该站"} />
+                        </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                        {repository.deprecationReason && (
+                            <div
+                                className="flex items-center mb-4 p-3 rounded-lg text-orange-600 bg-orange-50 dark:bg-orange-950/20">
+                                <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0" />
+                                <div>
+                                    <div className="text-sm font-semibold">
+                                        该库已不再维护 {formatDate(repository.endDate)}
+                                    </div>
+                                    <div className="text-sm">
+                                        {repository.deprecationReason}
                                     </div>
                                 </div>
                             </div>
+                        )}
+                        <p className="text-base leading-relaxed text-muted-foreground">
+                            {repository.description}
+                        </p>
+                    </CardContent>
+                    <CardFooter>
+                        <div
+                            className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                            {repository.size && (
+                                <div className="flex items-center gap-2">
+                                    <Database className="h-4 w-4" />
+                                    <span>{repository.size.value}</span>
+                                </div>
+                            )}
+
+                            {repository.institution && repository.institution.length > 0 && (
+                                <div className="flex items-center gap-2">
+                                    <Building className="h-4 w-4" />
+                                    <span>{repository.institution.length} 个机构</span>
+                                </div>
+                            )}
+
+                            {repository.startDate && (
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>创建于 {formatDate(repository.startDate)}</span>
+                                </div>
+                            )}
+
+                            {repository.lastUpdate && (
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>更新于 {formatDate(repository.lastUpdate)}</span>
+                                </div>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                                <Signature className="h-4 w-4 " />
+                                <div className="flex flex-wrap gap-2">
+                                    平台标识
+                                    {repository.repositoryIdentifier?.map((identifier) => (
+                                        <Badge key={identifier} variant="outline"
+                                               className="font-mono text-xs px-2 py-0.5 border-border bg-muted/50">
+                                            {identifier}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    </CardHeader>
+                    </CardFooter>
                 </Card>
 
                 <Tabs defaultValue="overview" className="space-y-6">

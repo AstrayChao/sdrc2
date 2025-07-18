@@ -8,7 +8,7 @@ import Image from "next/image"
 export function Footer() {
     return (
         <footer className="border-t bg-gray-800 text-muted ">
-            <div className="container  mx-auto max-w-6xl px-4 py-8">
+            <div className="container  mx-auto max-w-6xl px-4 py-6">
                 <div className="flex  justify-center">
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl w-full">
                         {/* Quick links */}

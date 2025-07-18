@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Grid, List, Search, SortAsc, SortDesc } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RealRepositoryCard } from "./real-repository-card";
 import { AdvancedSearch } from "../search/advanced-search";
-import type { Repository } from "@/types/repository";
 import { useRouter } from "next/navigation";
 import {
     Pagination,
@@ -19,16 +17,9 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
-
-interface ApiResponse {
-    repositories: Repository[];
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-}
+import { useRepositories } from "@/hooks/use-repository";
+import InternalServerErrorPage from "@/app/500";
+import { RepositoryListSkeleton } from "@/components/features/repository/ssr/repository-list-skeleton";
 
 export function RepositoryCatalog() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -38,25 +29,22 @@ export function RepositoryCatalog() {
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
     const [page, setPage] = useState(1);
     const router = useRouter();
+    const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({});
+    const { data, isLoading, error } = useRepositories({ searchTerm, page, sortBy, sortOrder, ...advancedFilters })
 
-    const { data, isLoading, error } = useQuery<ApiResponse>({
-        queryKey: ["repositories", { searchTerm, sortBy, sortOrder, page }],
-        queryFn: async () => {
-            const params = new URLSearchParams();
-            if (searchTerm) params.set("q", searchTerm);
-            params.set("page", page.toString());
-            params.set("limit", "20");
-            params.set("sortBy", sortBy);
-            params.set("sortOrder", sortOrder);
+    if (error) {
+        return <InternalServerErrorPage />
+    }
 
-            const res = await fetch(`/api/repositories?${params.toString()}`);
-            if (!res.ok) throw new Error("Failed to fetch repositories");
-            return res.json();
-        },
-    });
+    const repositories = data?.data?.repositories || [];
+    const pagination = data?.data?.pagination || { page: 1, limit: 20, total: 0, totalPages: 1 };
 
-    const repositories = data?.repositories || [];
-    const pagination = data?.pagination || { page: 1, limit: 20, total: 0, totalPages: 1 };
+    const handleResetSearch = () => {
+        setSearchTerm("");
+        setPage(1);
+    };
+
+
     const handleViewDetail = (id: string) => {
         router.push(`/catalog/${id}`);
     };
@@ -78,23 +66,20 @@ export function RepositoryCatalog() {
     const handleAdvancedSearch = (searchParams: any) => {
         setSearchTerm(searchParams.keyword || "");
         setPage(1);
+        setAdvancedFilters({
+            from: searchParams.from,
+            subjects: searchParams.subjects,
+            contentTypes: searchParams.contentTypes,
+            accessTypes: searchParams.accessTypes,
+            countries: searchParams.countries,
+            institutionTypes: searchParams.institutionTypes,
+            startYear: searchParams.dateRange.start,
+            hasCertificates: searchParams.hasCertificates,
+            hasAPI: searchParams.hasAPI,
+        });
     };
 
-    const handleResetSearch = () => {
-        setSearchTerm("");
-        setPage(1);
-    };
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <div className="text-center space-y-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-                    <p className="text-muted-foreground">正在加载数据仓库...</p>
-                </div>
-            </div>
-        );
-    }
     return (
         <div className="container space-y-6 max-w-6xl mx-auto">
             {/* Header */}
@@ -140,7 +125,8 @@ export function RepositoryCatalog() {
                             variant="outline"
                             size="sm"
                             onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}>
-                            {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
+                            {sortOrder === "asc" ? <SortAsc className="h-4 w-4" /> :
+                                <SortDesc className="h-4 w-4" />}
                         </Button>
                     </div>
                 </div>
@@ -172,45 +158,50 @@ export function RepositoryCatalog() {
                 </div>
             </div>
 
-            {/* Results */}
-            <div
-                className={`grid gap-6 ${
-                    viewMode === "grid" ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
-                }`}>
-                {repositories.map((repository) => (
-                        <RealRepositoryCard
-                            key={repository.id}
-                            repository={repository}
-                            expanded={expandedCards.has(repository.id!)}
-                            onToggle={handleToggleExpand}
-                            onViewDetail={handleViewDetail}
-                            viewMode={viewMode}
-                        />
-                    )
-                )}
-            </div>
-
-            {repositories.length === 0 && !isLoading && (
-                <div className="text-center py-12 bg-muted/30 rounded-xl">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-                        <Search className="h-8 w-8 text-primary" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-foreground mb-2">未找到匹配的仓库</h3>
-                    <p className="text-muted-foreground max-w-md mx-auto">
-                        尝试调整搜索条件或清除筛选器以查看所有结果。
-                    </p>
-                    <Button variant="outline" className="mt-4" onClick={handleResetSearch}>
-                        清除筛选
-                    </Button>
-                </div>
-            )}
+            {
+                isLoading ? (
+                        <RepositoryListSkeleton />
+                    ) :
+                    repositories && repositories.length > 0 ?
+                        (
+                            <div
+                                className={`grid gap-6 ${
+                                    viewMode === "grid" ? "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+                                }`}>
+                                {repositories.map((repository) => (
+                                        <RealRepositoryCard
+                                            key={repository.id}
+                                            repository={repository}
+                                            expanded={expandedCards.has(repository.id!)}
+                                            onToggle={handleToggleExpand}
+                                            onViewDetail={handleViewDetail}
+                                            viewMode={viewMode}
+                                        />
+                                    )
+                                )}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-muted/30 rounded-xl">
+                                <div
+                                    className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                                    <Search className="h-8 w-8 text-primary" />
+                                </div>
+                                <h3 className="text-xl font-semibold text-foreground mb-2">未找到匹配的仓库</h3>
+                                <p className="text-muted-foreground max-w-md mx-auto">
+                                    尝试调整搜索条件或清除筛选器以查看所有结果。
+                                </p>
+                                <Button variant="outline" className="mt-4" onClick={handleResetSearch}>
+                                    清除筛选
+                                </Button>
+                            </div>)
+            }
             {pagination.totalPages > 1 && (
                 <Pagination className="mt-8">
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
                                 onClick={page === 1 ? undefined : () => handlePageChange(Math.max(1, page - 1))}
-                                className={page === 1 ? "opacity-50 cursor-not-allowed" : ""}
+                                className={page === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                             />
                         </PaginationItem>
 
@@ -222,6 +213,7 @@ export function RepositoryCatalog() {
                             return (
                                 <PaginationItem key={pageNum}>
                                     <PaginationLink
+                                        className="cursor-pointer"
                                         isActive={pageNum === page}
                                         onClick={() => handlePageChange(pageNum)}
                                     >
@@ -234,7 +226,7 @@ export function RepositoryCatalog() {
                         <PaginationItem>
                             <PaginationNext
                                 onClick={page === pagination.totalPages ? undefined : () => handlePageChange(Math.min(pagination.totalPages, page + 1))}
-                                className={page === pagination.totalPages ? "opacity-50 cursor-not-allowed" : ""}
+                                className={page === pagination.totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                             />
                         </PaginationItem>
                     </PaginationContent>

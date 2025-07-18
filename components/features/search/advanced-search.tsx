@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { ChevronDown, ChevronUp, Filter, Search, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
 
 interface AdvancedSearchProps {
     onSearch: (params: SearchParams) => void
@@ -38,21 +38,58 @@ const from = [
 ]
 
 const subjects = [
-    "生物学",
-    "化学",
-    "物理学",
-    "地球科学",
-    "环境科学",
-    "医学",
-    "工程学",
-    "计算机科学",
-    "数学",
-    "社会科学",
-    "人文学科",
-    "其他",
+    {
+        label: "生物学",
+        value: "Biology",
+    },
+    {
+        label: "数学",
+        value: "Mathematics",
+    },
+    {
+        label: "计算机科学",
+        value: "Computer Science",
+    },
+    {
+        label: "物理学",
+        value: "Physics",
+    },
+    {
+        label: "地球科学",
+        value: "Geosciences",
+    },
+    {
+        label: "环境科学",
+        value: "Environmental Science",
+    },
+    {
+        label: "医学",
+        value: "Medicine",
+    },
+    {
+        label: "生命科学",
+        value: "Life Sciences",
+    },
+    {
+        label: "历史学",
+        value: "History",
+    }
 ]
 
-const contentTypes = ["数据集", "数据库", "图像", "文档", "软件", "模型", "工具", "其他"]
+const contentTypes = [
+    {
+        value: "dataset",
+        label: "数据集",
+    }, {
+        value: "Image",
+        label: "图像",
+    }, {
+        value: "document",
+        label: "文档",
+    }, {
+        value: "Software applications",
+        label: "软件",
+    }]
 
 const accessTypes = [
     { value: "open", label: "开放访问" },
@@ -117,7 +154,7 @@ export function AdvancedSearch({ onSearch, onReset }: AdvancedSearchProps) {
         if (searchParams.accessTypes.length > 0) count++
         if (searchParams.countries.length > 0) count++
         if (searchParams.institutionTypes.length > 0) count++
-        if (searchParams.dateRange.start || searchParams.dateRange.end) count++
+        if (searchParams.dateRange.start) count++
         if (searchParams.hasCertificates) count++
         if (searchParams.hasAPI) count++
         return count
@@ -163,6 +200,25 @@ export function AdvancedSearch({ onSearch, onReset }: AdvancedSearchProps) {
                                 onChange={(e) => setSearchParams((prev) => ({ ...prev, keyword: e.target.value }))}
                                 className="bg-background border-border"
                             />
+                            <div className="flex items-center gap-3 pt-4 border-t border-border">
+                                <Button onClick={handleSearch}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90">
+                                    <Search className="h-4 w-4 mr-2" />
+                                    应用筛选
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={handleReset}
+                                    className="border-border text-muted-foreground hover:bg-accent bg-transparent"
+                                >
+                                    <X className="h-4 w-4 mr-2" />
+                                    重置筛选
+                                </Button>
+                                {activeFiltersCount > 0 && (
+                                    <div
+                                        className="text-sm text-muted-foreground">已设置 {activeFiltersCount} 个筛选条件</div>
+                                )}
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -252,15 +308,15 @@ export function AdvancedSearch({ onSearch, onReset }: AdvancedSearchProps) {
                             <Label className="text-sm font-medium text-card-foreground">学科领域</Label>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                                 {subjects.map((subject) => (
-                                    <div key={subject} className="flex items-center space-x-2">
+                                    <div key={subject.value} className="flex items-center space-x-2">
                                         <Checkbox
                                             id={`subject-${subject}`}
-                                            checked={searchParams.subjects.includes(subject)}
-                                            onCheckedChange={(checked) => updateArrayField("subjects", subject, checked as boolean)}
+                                            checked={searchParams.subjects.includes(subject.value)}
+                                            onCheckedChange={(checked) => updateArrayField("subjects", subject.value, checked as boolean)}
                                         />
-                                        <Label htmlFor={`subject-${subject}`}
+                                        <Label htmlFor={`subject-${subject.value}`}
                                                className="text-sm text-muted-foreground cursor-pointer">
-                                            {subject}
+                                            {subject.label}
                                         </Label>
                                     </div>
                                 ))}
@@ -272,15 +328,15 @@ export function AdvancedSearch({ onSearch, onReset }: AdvancedSearchProps) {
                             <Label className="text-sm font-medium text-card-foreground">内容类型</Label>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                                 {contentTypes.map((type) => (
-                                    <div key={type} className="flex items-center space-x-2">
+                                    <div key={type.value} className="flex items-center space-x-2">
                                         <Checkbox
-                                            id={`content-${type}`}
-                                            checked={searchParams.contentTypes.includes(type)}
-                                            onCheckedChange={(checked) => updateArrayField("contentTypes", type, checked as boolean)}
+                                            id={`content-${type.value}`}
+                                            checked={searchParams.contentTypes.includes(type.value)}
+                                            onCheckedChange={(checked) => updateArrayField("contentTypes", type.value, checked as boolean)}
                                         />
-                                        <Label htmlFor={`content-${type}`}
+                                        <Label htmlFor={`content-${type.value}`}
                                                className="text-sm text-muted-foreground cursor-pointer">
-                                            {type}
+                                            {type.label}
                                         </Label>
                                     </div>
                                 ))}
@@ -308,46 +364,12 @@ export function AdvancedSearch({ onSearch, onReset }: AdvancedSearchProps) {
                                         className="bg-background border-border"
                                     />
                                 </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="end-date" className="text-xs text-muted-foreground">
-                                        结束时间
-                                    </Label>
-                                    <Input
-                                        id="end-date"
-                                        type="date"
-                                        value={searchParams.dateRange.end || ""}
-                                        onChange={(e) =>
-                                            setSearchParams((prev) => ({
-                                                ...prev,
-                                                dateRange: { ...prev.dateRange, end: e.target.value },
-                                            }))
-                                        }
-                                        className="bg-background border-border"
-                                    />
-                                </div>
+
                             </div>
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex items-center gap-3 pt-4 border-t border-border">
-                            <Button onClick={handleSearch}
-                                    className="bg-primary text-primary-foreground hover:bg-primary/90">
-                                <Search className="h-4 w-4 mr-2" />
-                                应用筛选
-                            </Button>
-                            <Button
-                                variant="outline"
-                                onClick={handleReset}
-                                className="border-border text-muted-foreground hover:bg-accent bg-transparent"
-                            >
-                                <X className="h-4 w-4 mr-2" />
-                                重置筛选
-                            </Button>
-                            {activeFiltersCount > 0 && (
-                                <div
-                                    className="text-sm text-muted-foreground">已设置 {activeFiltersCount} 个筛选条件</div>
-                            )}
-                        </div>
+
                     </CardContent>
                 </CollapsibleContent>
             </Collapsible>

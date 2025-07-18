@@ -1,43 +1,40 @@
-import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/db";
-import { RepositoryDocument } from "@/types/repository";
-import { ObjectId } from "mongodb";
-import { extractArrayValues, extractValue } from "@/lib/utils";
+import { NextRequest } from "next/server";
+import { z } from "zod";
+import { createErrorResponse, createSuccessResponse } from "@/lib/api/response";
+import { getRepositoryById } from "@/lib/db/repo";
 
-export async function GET(request: NextRequest, { params }: {params: Promise<{id: string}>}) {
-    const { id } = await params;
+// 参数验证
+const paramsSchema = z.object({
+    id: z.string().min(1),
+});
 
-    if (!id) {
-        return NextResponse.json({ error: "Missing repository ID" }, { status: 400 });
+export async function GET(
+    request: NextRequest,
+    { params }: {params: Promise<{id: string}>}
+) {
+    try {
+        // 解析参数
+        const { id } = await params;
+
+        // 验证参数
+        const validationResult = paramsSchema.safeParse({ id });
+        if (!validationResult.success) {
+            return createErrorResponse("Invalid repository ID", 400);
+        }
+
+        // 获取仓库详情
+        const repository = await getRepositoryById(id);
+
+        if (!repository) {
+            return createErrorResponse("Repository not found", 404);
+        }
+
+        // 返回成功响应
+        return createSuccessResponse({
+            repository,
+        });
+    } catch (error) {
+        console.error("API Error:", error);
+        return createErrorResponse("Internal server error", 500);
     }
-
-    const { db } = await connectToDatabase();
-    const collection = db.collection<RepositoryDocument>("final");
-
-
-    const repository = await collection.findOne({ _id: new ObjectId(id) });
-
-    if (!repository) {
-        return NextResponse.json({ error: "Repository not found" }, { status: 404 });
-    }
-
-    const { _id, ...rest } = repository;
-    const transformedRepo = {
-        ...rest,
-        id: _id.toString(),
-        repositoryName: extractValue<string>(rest.repositoryName),
-        description: extractValue<string>(rest.description),
-        subject: extractArrayValues<{value: string}>(rest.subject),
-        keyword: extractArrayValues<string>(rest.keyword),
-        contentType: extractArrayValues<{value: string}>(rest.contentType),
-        additionalName: extractArrayValues<{value: string}>(rest.additionalName),
-        institution: rest.institution?.map(inst => ({
-            ...inst,
-            institutionName: extractValue<string>(inst.institutionName),
-            institutionAdditionalName: extractArrayValues<{value: string}>(inst.institutionAdditionalName)
-        }))
-    };
-    return NextResponse.json({
-        repository: transformedRepo
-    });
 }

@@ -23,7 +23,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
                 {/* Main content takes full width on desktop */}
-                <main className="flex-1 transition-all duration-300">
+                <main className="flex-1 transition-all duration-300 ">
                     <div className="container mx-auto px-4 py-8 max-w-7xl">{children}</div>
                 </main>
             </div>
